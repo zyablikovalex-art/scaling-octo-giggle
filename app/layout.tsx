@@ -4,6 +4,7 @@ import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CozyBackground } from "@/components/cozy-background";
+import { ChatWidget } from "@/components/chat-widget";
 
 export const metadata: Metadata = {
   title: "Ёлки.Shop — продавай ёлки красиво",
@@ -23,6 +24,7 @@ export default function RootLayout({
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
+        <ChatWidget />
       </body>
     </html>
   );
