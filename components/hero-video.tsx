@@ -13,12 +13,12 @@ export function HeroVideo() {
         muted
         playsInline
         preload="auto"
-        className="h-full w-full scale-110 object-cover blur-md saturate-[0.9]"
+        className="h-full w-full scale-105 object-cover blur-[2px] saturate-[0.95]"
       >
         <source src={videoSrc} type="video/mp4" />
       </video>
-      <div className="absolute inset-0 bg-black/60" />
-      <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background" />
+      <div className="absolute inset-0 bg-black/45" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/40 to-background" />
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useChat } from "ai/react";
-import { Loader2, MessageCircle, Send, Sparkles, X } from "lucide-react";
+import { Loader2, MessageCircle, Send, Sparkles, TreePine, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -81,7 +81,7 @@ export function ChatWidget() {
         aria-label="Чат с Ёлкиным помощником"
         aria-hidden={!open}
         className={cn(
-          "fixed bottom-24 right-4 z-50 flex h-[min(560px,80vh)] w-[calc(100vw-2rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-border/60 bg-card/95 shadow-2xl backdrop-blur-xl",
+          "fixed bottom-24 right-4 z-50 flex h-[min(560px,80vh)] w-[calc(100vw-2rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-white/10 bg-card/85 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl",
           "origin-bottom-right transition-all duration-300",
           open
             ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
@@ -90,8 +90,8 @@ export function ChatWidget() {
       >
         <div className="flex items-center justify-between border-b border-border/50 bg-card/80 p-4">
           <div className="flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-[0_0_18px_rgba(16,185,129,0.45)]">
-              🎄
+            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-emerald-500/40 bg-emerald-500/15 text-emerald-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+              <TreePine className="h-4 w-4" strokeWidth={1.75} />
             </span>
             <div>
               <p className="text-sm font-semibold leading-tight">
