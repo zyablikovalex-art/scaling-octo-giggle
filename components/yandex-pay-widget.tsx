@@ -33,7 +33,6 @@ declare global {
 
 interface Props {
   merchantId?: string;
-  env?: "PRODUCTION" | "SANDBOX";
 }
 
 const TOTAL_AMOUNT = "15980.00";
@@ -47,7 +46,7 @@ async function waitForSdk(timeoutMs = 8000) {
   return null;
 }
 
-export function YandexPayWidget({ merchantId, env = "PRODUCTION" }: Props) {
+export function YandexPayWidget({ merchantId }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -66,10 +65,7 @@ export function YandexPayWidget({ merchantId, env = "PRODUCTION" }: Props) {
       try {
         session = await YaPay.createSession(
           {
-            env:
-              env === "SANDBOX"
-                ? YaPay.PaymentEnv?.Sandbox ?? "SANDBOX"
-                : YaPay.PaymentEnv?.Production ?? "PRODUCTION",
+            env: YaPay.PaymentEnv?.Sandbox ?? "SANDBOX",
             version: 4,
             merchantId,
             currencyCode: YaPay.CurrencyCode?.Rub ?? "RUB",
