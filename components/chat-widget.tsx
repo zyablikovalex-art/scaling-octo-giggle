@@ -1,77 +1,47 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useChat } from "ai/react";
 import { Loader2, MessageCircle, Send, Sparkles, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-type Msg = { role: "user" | "assistant"; content: string };
-
-const INITIAL: Msg[] = [
-  {
-    role: "assistant",
-    content:
-      "Привет! Я Ёлкин — помогу выбрать дерево к Новому году. Расскажи, какая высота потолка и есть ли в доме маленькие дети?",
-  },
-];
+const GREETING =
+  "Привет! Я Ёлкин — помогу выбрать дерево к Новому году. Расскажи, какая высота потолка и есть ли в доме маленькие дети?";
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Msg[]>(INITIAL);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const {
+    messages,
+    input,
+    handleInputChange,
+    handleSubmit,
+    isLoading,
+    error,
+  } = useChat({
+    api: "/api/chat",
+    initialMessages: [
+      { id: "greeting", role: "assistant", content: GREETING },
+    ],
+  });
 
   useEffect(() => {
     scrollRef.current?.scrollTo({
       top: scrollRef.current.scrollHeight,
       behavior: "smooth",
     });
-  }, [messages, loading, open]);
+  }, [messages, isLoading, open]);
 
   useEffect(() => {
     if (open) inputRef.current?.focus();
   }, [open]);
 
-  async function send() {
-    const text = input.trim();
-    if (!text || loading) return;
-
-    const next: Msg[] = [...messages, { role: "user", content: text }];
-    setMessages(next);
-    setInput("");
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ messages: next }),
-      });
-      const data = (await res.json()) as { message?: string; error?: string };
-
-      if (!res.ok) {
-        throw new Error(data.error ?? `HTTP ${res.status}`);
-      }
-      setMessages([
-        ...next,
-        {
-          role: "assistant",
-          content: data.message?.trim() || "Хм, ответа не пришло. Попробуй ещё раз.",
-        },
-      ]);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "Что-то пошло не так";
-      setMessages([
-        ...next,
-        { role: "assistant", content: `Не получилось ответить: ${msg}` },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const lastMessage = messages[messages.length - 1];
+  const showTyping = isLoading && lastMessage?.role === "user";
 
   return (
     <>
@@ -128,7 +98,7 @@ export function ChatWidget() {
                 Ёлкин помощник
               </p>
               <p className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Sparkles className="h-3 w-3" /> на базе ChatGPT
+                <Sparkles className="h-3 w-3" /> Llama 3.3 · Groq
               </p>
             </div>
           </div>
@@ -146,9 +116,9 @@ export function ChatWidget() {
           ref={scrollRef}
           className="flex-1 space-y-3 overflow-y-auto px-4 py-4"
         >
-          {messages.map((m, i) => (
+          {messages.map((m) => (
             <div
-              key={i}
+              key={m.id}
               className={cn(
                 "flex",
                 m.role === "user" ? "justify-end" : "justify-start",
@@ -166,7 +136,8 @@ export function ChatWidget() {
               </div>
             </div>
           ))}
-          {loading && (
+
+          {showTyping && (
             <div className="flex justify-start">
               <div className="flex items-center gap-2 rounded-2xl rounded-bl-sm bg-muted px-3 py-2 text-sm text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -174,27 +145,31 @@ export function ChatWidget() {
               </div>
             </div>
           )}
+
+          {error && (
+            <div className="flex justify-start">
+              <div className="max-w-[85%] rounded-2xl rounded-bl-sm border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive-foreground">
+                Не получилось ответить: {error.message}
+              </div>
+            </div>
+          )}
         </div>
 
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            send();
-          }}
+          onSubmit={handleSubmit}
           className="flex items-center gap-2 border-t border-border/50 p-3"
         >
           <input
             ref={inputRef}
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={handleInputChange}
             placeholder="Спроси про ёлку…"
-            disabled={loading}
             className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm outline-none transition-colors focus:border-ring focus:ring-2 focus:ring-ring/40 disabled:opacity-60"
           />
           <Button
             type="submit"
             size="icon"
-            disabled={loading || !input.trim()}
+            disabled={isLoading || !input.trim()}
             aria-label="Отправить"
           >
             <Send className="h-4 w-4" />
