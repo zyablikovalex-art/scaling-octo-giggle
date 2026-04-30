@@ -57,7 +57,7 @@ export default function HomePage() {
     <>
       <section className="relative isolate overflow-hidden">
         <HeroVideo />
-        <div className="mx-auto grid max-w-7xl grid-cols-1 items-end gap-x-16 gap-y-14 px-6 pb-24 pt-28 md:grid-cols-12 md:pb-32 md:pt-40">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-x-16 gap-y-14 px-6 pb-24 pt-28 md:grid-cols-12 md:pb-32 md:pt-40">
           <div className="md:col-span-7 lg:col-span-7">
             <span className="fade-up inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.22em] text-amber-200/90 backdrop-blur-sm">
               Сезон 2025/26 открыт
