@@ -53,6 +53,10 @@ const stats = [
 
 export default function HomePage() {
   const merchantId = process.env.ya_pay_mid;
+  const yaPayEnv =
+    process.env.ya_pay_env?.toUpperCase() === "SANDBOX"
+      ? "SANDBOX"
+      : "PRODUCTION";
   return (
     <>
       <section className="relative isolate overflow-hidden">
@@ -121,7 +125,7 @@ export default function HomePage() {
             <p className="mb-3 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
               Оплата
             </p>
-            <YandexPayWidget merchantId={merchantId} />
+            <YandexPayWidget merchantId={merchantId} env={yaPayEnv} />
           </div>
         </div>
       </section>
