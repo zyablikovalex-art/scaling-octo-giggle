@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TreeScroll } from "@/components/tree-scroll";
+import { TreeShowcase } from "@/components/tree-scroll";
 
 const trees = [
   {
@@ -95,7 +95,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <TreeScroll />
+      <TreeShowcase />
 
       <section id="assortment" className="container pb-32 pt-12">
         <div className="mb-10 max-w-2xl">

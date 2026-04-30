@@ -83,6 +83,11 @@
     animation: twinkle 4s ease-in-out infinite;
   }
 
+  @keyframes tree-spin {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(360deg); }
+  }
+
   @keyframes twinkle {
     0%, 100% { opacity: 0.15; transform: scale(0.8); }
     50% { opacity: 0.9; transform: scale(1.1); }
