@@ -47,7 +47,7 @@ const trees = [
 export default function HomePage() {
   return (
     <>
-      <section className="relative overflow-hidden">
+      <section className="relative isolate overflow-hidden">
         <HeroVideo />
         <div className="container flex flex-col items-center justify-center gap-6 py-24 text-center md:py-36">
           <span className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1 text-xs font-medium uppercase tracking-widest text-amber-200">
