@@ -19,7 +19,7 @@ declare global {
         destroy?: () => void;
       }>;
       CurrencyCode?: { Rub: string };
-      WidgetType?: { Ultimate: string };
+      WidgetType?: { Ultimate: string; Info: string };
       WidgetTheme?: { Light: string; Dark: string };
       WidgetPaddingType?: { Default: string; None: string };
       WidgetBackgroundType?: { Default: string };
@@ -67,7 +67,7 @@ function CashbackLive({ merchantId }: { merchantId: string }) {
             currencyCode: YaPay.CurrencyCode?.Rub ?? "RUB",
             orderId: `demo-${Date.now()}`,
             totalAmount: TOTAL_AMOUNT,
-            availablePaymentMethods: ["CARD"],
+            availablePaymentMethods: ["CARD", "SPLIT"],
             type: "ByToken",
           },
           {
@@ -80,14 +80,9 @@ function CashbackLive({ merchantId }: { merchantId: string }) {
         if (cancelled || !containerRef.current) return;
 
         session.mountWidget(containerRef.current, {
-          widgetType: YaPay.WidgetType?.Ultimate ?? "Ultimate",
+          widgetType: YaPay.WidgetType?.Info ?? "Info",
           widgetTheme: YaPay.WidgetTheme?.Dark ?? "DARK",
           borderRadius: 20,
-          padding: YaPay.WidgetPaddingType?.Default ?? "default",
-          withOutline: false,
-          widgetBackground: YaPay.WidgetBackgroundType?.Default ?? "default",
-          hideWidgetHeader: false,
-          widgetSize: YaPay.WidgetSize?.Medium ?? "medium",
         });
 
         setMounted(true);
