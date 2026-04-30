@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TreePine } from "lucide-react";
 
 const navItems = [
   { href: "/", label: "Главная" },
@@ -9,16 +10,16 @@ const navItems = [
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/60 backdrop-blur-xl">
-      <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 text-lg shadow-[0_0_20px_rgba(16,185,129,0.45)]">
-            🎄
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+        <Link href="/" className="group flex items-center gap-2.5">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 transition-colors group-hover:border-emerald-400/60 group-hover:bg-emerald-500/15">
+            <TreePine className="h-4 w-4" strokeWidth={1.75} />
           </span>
-          <span className="text-lg font-semibold tracking-tight">
+          <span className="text-[15px] font-medium tracking-tight">
             Ёлки.Shop
           </span>
         </Link>
-        <nav className="flex items-center gap-6 text-sm font-medium">
+        <nav className="flex items-center gap-7 text-sm">
           {navItems.map((item) => (
             <Link
               key={item.href}

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TreeShowcase } from "@/components/tree-scroll";
 import { HeroVideo } from "@/components/hero-video";
 
 const trees = [
@@ -19,29 +18,35 @@ const trees = [
     height: "1.2 – 1.8 м",
     needles: "Длинные, мягкие",
     aroma: "Смолянистый, насыщенный",
-    price: "от 1 490 ₽",
+    price: "1 490 ₽",
   },
   {
     name: "Ель датская",
     height: "1.5 – 2.2 м",
     needles: "Густые, не осыпаются",
     aroma: "Свежий, лёгкий",
-    price: "от 3 290 ₽",
+    price: "3 290 ₽",
   },
   {
     name: "Ель голубая",
     height: "1.3 – 2.0 м",
     needles: "Серебристо-голубые",
     aroma: "Холодный, хвойный",
-    price: "от 4 590 ₽",
+    price: "4 590 ₽",
   },
   {
     name: "Пихта Нордмана",
     height: "1.6 – 2.5 м",
     needles: "Мягкие, не колются",
     aroma: "Нежный, цитрусовый",
-    price: "от 5 890 ₽",
+    price: "5 890 ₽",
   },
+];
+
+const stats = [
+  { value: "11 847", label: "ёлок продано в сезоне 2024/25" },
+  { value: "36 ч", label: "медианное время от заказа до двери" },
+  { value: "94.3%", label: "клиентов вернулись через год" },
 ];
 
 export default function HomePage() {
@@ -49,103 +54,125 @@ export default function HomePage() {
     <>
       <section className="relative isolate overflow-hidden">
         <HeroVideo />
-        <div className="container flex flex-col items-center justify-center gap-6 py-24 text-center md:py-36">
-          <span className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1 text-xs font-medium uppercase tracking-widest text-amber-200">
-            <Sparkles className="h-3.5 w-3.5" />
-            Сезон 2026 уже стартует
-          </span>
-          <h1 className="max-w-4xl bg-gradient-to-b from-white via-amber-100 to-amber-300/80 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-6xl md:text-7xl">
-            Продавай ёлки. Делай праздник.
-          </h1>
-          <p className="max-w-2xl text-lg text-muted-foreground sm:text-xl">
-            Каждая ёлка — это не просто дерево, а семейная традиция, запах
-            мандаринов и блеск гирлянд. Мы привозим хвою прямиком из питомника:
-            свежую, ароматную, готовую стать главной звездой Нового года. А ты
-            продаёшь не товар — а волшебство.
-          </p>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Button asChild size="lg" className="shadow-[0_0_30px_rgba(251,191,36,0.35)]">
-              <Link href="#assortment">
-                Смотреть ассортимент
-                <ArrowRight className="ml-1" />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="/contacts">Стать партнёром</Link>
-            </Button>
+        <div className="mx-auto grid max-w-7xl grid-cols-1 items-end gap-x-16 gap-y-14 px-6 pb-24 pt-28 md:grid-cols-12 md:pb-32 md:pt-40">
+          <div className="md:col-span-7 lg:col-span-7">
+            <span className="fade-up inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.22em] text-amber-200/90 backdrop-blur-sm">
+              Сезон 2025/26 открыт
+            </span>
+            <h1
+              className="fade-up mt-6 text-4xl font-semibold leading-[1.05] tracking-tighter md:text-6xl"
+              style={{ animationDelay: "80ms" }}
+            >
+              Ёлки, которые помнят
+              <br />
+              запах детства.
+            </h1>
+            <p
+              className="fade-up mt-6 max-w-[58ch] text-base leading-relaxed text-muted-foreground md:text-lg"
+              style={{ animationDelay: "160ms" }}
+            >
+              Срубили во вторник под Владимиром — стоят у тебя в пятницу.
+              Каждое дерево с биркой питомника, в стрейч-сетке, с ровным срезом
+              под подставку. Хвоя живая, осыпь минимальная, аромат —
+              в первые двадцать минут после распаковки.
+            </p>
+            <div
+              className="fade-up mt-9 flex flex-col gap-3 sm:flex-row"
+              style={{ animationDelay: "240ms" }}
+            >
+              <Button asChild size="lg">
+                <Link href="#assortment">
+                  Смотреть ассортимент
+                  <ArrowRight className="ml-1 h-4 w-4" strokeWidth={1.75} />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link href="/contacts">Стать партнёром</Link>
+              </Button>
+            </div>
           </div>
 
-          <dl className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {[
-              { value: "12 000+", label: "ёлок продано за сезон" },
-              { value: "48 ч", label: "от заказа до доставки" },
-              { value: "98%", label: "клиентов возвращаются" },
-            ].map((s) => (
-              <div
-                key={s.label}
-                className="rounded-2xl border border-border/50 bg-card/40 px-6 py-5 backdrop-blur"
-              >
-                <dt className="text-2xl font-semibold text-amber-200">
-                  {s.value}
-                </dt>
-                <dd className="mt-1 text-sm text-muted-foreground">
-                  {s.label}
-                </dd>
-              </div>
-            ))}
-          </dl>
+          <div
+            className="fade-up md:col-span-5 md:col-start-8"
+            style={{ animationDelay: "320ms" }}
+          >
+            <dl className="divide-y divide-border/50 border-y border-border/50">
+              {stats.map((s) => (
+                <div
+                  key={s.label}
+                  className="flex items-baseline justify-between gap-6 py-5"
+                >
+                  <dt className="text-sm leading-snug text-muted-foreground">
+                    {s.label}
+                  </dt>
+                  <dd className="font-mono text-2xl font-medium tabular-nums tracking-tight text-amber-100">
+                    {s.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </div>
       </section>
 
-      <TreeShowcase />
-
-      <section id="assortment" className="container pb-32 pt-12">
-        <div className="mb-10 max-w-2xl">
-          <p className="text-xs uppercase tracking-[0.3em] text-amber-200/80">
-            Ассортимент
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-            Подбери ёлку под свою витрину
-          </h2>
-          <p className="mt-3 text-muted-foreground">
-            Цены оптовые, минимальная партия — 10 деревьев. Все позиции с
-            сертификатом и маркировкой «Честный знак».
-          </p>
-        </div>
-
-        <div className="overflow-hidden rounded-2xl border border-border/60 bg-card/40 backdrop-blur-md">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-muted/30 hover:bg-muted/30">
-                <TableHead>Сорт</TableHead>
-                <TableHead>Высота</TableHead>
-                <TableHead>Хвоя</TableHead>
-                <TableHead>Аромат</TableHead>
-                <TableHead className="text-right">Цена</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {trees.map((t) => (
-                <TableRow key={t.name}>
-                  <TableCell className="font-medium text-foreground">
-                    {t.name}
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {t.height}
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {t.needles}
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {t.aroma}
-                  </TableCell>
-                  <TableCell className="text-right font-semibold text-amber-200">
-                    {t.price}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+      <section id="assortment" className="relative">
+        <div className="mx-auto max-w-7xl px-6 py-24 md:py-32">
+          <div className="grid grid-cols-1 gap-x-16 gap-y-10 md:grid-cols-12">
+            <div className="md:col-span-5">
+              <p className="text-[11px] uppercase tracking-[0.22em] text-amber-200/80">
+                Ассортимент
+              </p>
+              <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tighter md:text-5xl">
+                Подбери ёлку под потолок и привычки.
+              </h2>
+              <p className="mt-5 max-w-[40ch] text-base leading-relaxed text-muted-foreground">
+                Цены оптовые, минимальная партия — десять деревьев. Все позиции
+                с сертификатом и маркировкой «Честный знак».
+              </p>
+            </div>
+            <div className="md:col-span-7">
+              <div
+                className="overflow-hidden rounded-2xl border border-border/50 bg-card/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-md"
+              >
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-b-border/50 bg-muted/20 hover:bg-muted/20">
+                      <TableHead>Сорт</TableHead>
+                      <TableHead>Высота</TableHead>
+                      <TableHead className="hidden sm:table-cell">
+                        Хвоя
+                      </TableHead>
+                      <TableHead className="text-right">Цена</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {trees.map((t) => (
+                      <TableRow
+                        key={t.name}
+                        className="border-b-border/40 last:border-b-0"
+                      >
+                        <TableCell className="font-medium">
+                          <div>{t.name}</div>
+                          <div className="mt-0.5 text-xs text-muted-foreground sm:hidden">
+                            {t.needles}
+                          </div>
+                        </TableCell>
+                        <TableCell className="font-mono text-sm tabular-nums text-muted-foreground">
+                          {t.height}
+                        </TableCell>
+                        <TableCell className="hidden text-muted-foreground sm:table-cell">
+                          {t.needles}
+                        </TableCell>
+                        <TableCell className="text-right font-mono text-sm font-medium tabular-nums text-amber-100">
+                          от {t.price}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </>

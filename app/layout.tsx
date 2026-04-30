@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 
 import { SiteHeader } from "@/components/site-header";
@@ -7,9 +8,9 @@ import { CozyBackground } from "@/components/cozy-background";
 import { ChatWidget } from "@/components/chat-widget";
 
 export const metadata: Metadata = {
-  title: "Ёлки.Shop — продавай ёлки красиво",
+  title: "Ёлки.Shop — деревья, которые помнят запах детства",
   description:
-    "Тёплый лендинг для продажи новогодних ёлок: сосны, пихты и ели прямиком от поставщика.",
+    "Тёплый лендинг для продажи новогодних ёлок: сосны, пихты и ели прямиком из питомника.",
 };
 
 export default function RootLayout({
@@ -18,8 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ru" suppressHydrationWarning>
-      <body className="relative flex min-h-screen flex-col font-sans antialiased">
+    <html lang="ru" suppressHydrationWarning className={GeistSans.variable}>
+      <body className="relative flex min-h-[100dvh] flex-col antialiased">
         <CozyBackground />
         <SiteHeader />
         <main className="flex-1">{children}</main>
