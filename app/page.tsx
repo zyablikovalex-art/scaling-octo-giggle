@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { HeroVideo } from "@/components/hero-video";
+import { YandexPayMock } from "@/components/yandex-pay-mock";
 
 const trees = [
   {
@@ -129,6 +130,12 @@ export default function HomePage() {
                 Цены оптовые, минимальная партия — десять деревьев. Все позиции
                 с сертификатом и маркировкой «Честный знак».
               </p>
+              <div className="mt-8 max-w-[420px]">
+                <p className="mb-3 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                  Оплата
+                </p>
+                <YandexPayMock />
+              </div>
             </div>
             <div className="md:col-span-7">
               <div
