@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table";
 import { HeroVideo } from "@/components/hero-video";
 import { YandexPayMock } from "@/components/yandex-pay-mock";
+import { cn } from "@/lib/utils";
 
 const trees = [
   {
@@ -77,6 +78,25 @@ export default function HomePage() {
               под подставку. Хвоя живая, осыпь минимальная, аромат —
               в первые двадцать минут после распаковки.
             </p>
+            <dl
+              className="fade-up mt-7 flex flex-wrap items-baseline gap-x-6 gap-y-2 text-sm text-muted-foreground"
+              style={{ animationDelay: "200ms" }}
+            >
+              {stats.map((s, i) => (
+                <div
+                  key={s.label}
+                  className={cn(
+                    "flex items-baseline gap-2",
+                    i > 0 && "border-l border-border/50 pl-6",
+                  )}
+                >
+                  <dt className="font-mono text-base font-semibold tabular-nums text-amber-100">
+                    {s.value}
+                  </dt>
+                  <dd>{s.label}</dd>
+                </div>
+              ))}
+            </dl>
             <div
               className="fade-up mt-9 flex flex-col gap-3 sm:flex-row"
               style={{ animationDelay: "240ms" }}
@@ -97,21 +117,10 @@ export default function HomePage() {
             className="fade-up md:col-span-5 md:col-start-8"
             style={{ animationDelay: "320ms" }}
           >
-            <dl className="divide-y divide-border/50 border-y border-border/50">
-              {stats.map((s) => (
-                <div
-                  key={s.label}
-                  className="flex items-baseline justify-between gap-6 py-5"
-                >
-                  <dt className="text-sm leading-snug text-muted-foreground">
-                    {s.label}
-                  </dt>
-                  <dd className="font-mono text-2xl font-medium tabular-nums tracking-tight text-amber-100">
-                    {s.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            <p className="mb-3 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+              Оплата
+            </p>
+            <YandexPayMock />
           </div>
         </div>
       </section>
@@ -130,12 +139,6 @@ export default function HomePage() {
                 Цены оптовые, минимальная партия — десять деревьев. Все позиции
                 с сертификатом и маркировкой «Честный знак».
               </p>
-              <div className="mt-8 max-w-[420px]">
-                <p className="mb-3 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                  Оплата
-                </p>
-                <YandexPayMock />
-              </div>
             </div>
             <div className="md:col-span-7">
               <div

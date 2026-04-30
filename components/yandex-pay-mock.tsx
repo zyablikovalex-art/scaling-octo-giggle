@@ -1,21 +1,60 @@
+"use client";
+
+import { useState } from "react";
 import { ChevronRight, Plus } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-const schedule = [
-  { date: "30 апр", amount: "3 995 ₽" },
-  { date: "14 мая", amount: "3 995 ₽" },
-  { date: "28 мая", amount: "3 995 ₽" },
-  { date: "11 июн", amount: "3 995 ₽" },
+type TenorId = "2m" | "4m" | "6m";
+
+const tenors: {
+  id: TenorId;
+  label: string;
+  payments: number;
+  intervalDays: number;
+}[] = [
+  { id: "2m", label: "2 мес", payments: 4, intervalDays: 14 },
+  { id: "4m", label: "4 мес", payments: 4, intervalDays: 30 },
+  { id: "6m", label: "6 мес", payments: 6, intervalDays: 30 },
 ];
 
-const tenors = [
-  { label: "2 мес", active: true },
-  { label: "4 мес", active: false },
-  { label: "6 мес", active: false },
+const TOTAL = 15980;
+const ANCHOR = new Date(2026, 3, 30);
+
+const monthsRu = [
+  "янв",
+  "фев",
+  "мар",
+  "апр",
+  "май",
+  "июн",
+  "июл",
+  "авг",
+  "сен",
+  "окт",
+  "ноя",
+  "дек",
 ];
+
+function formatDate(d: Date) {
+  return `${d.getDate()} ${monthsRu[d.getMonth()]}`;
+}
+
+function formatRub(n: number) {
+  return `${n.toLocaleString("ru-RU")} ₽`.replace(/ /g, " ");
+}
 
 export function YandexPayMock() {
+  const [tenorId, setTenorId] = useState<TenorId>("2m");
+  const tenor = tenors.find((t) => t.id === tenorId) ?? tenors[0];
+
+  const perPayment = Math.round(TOTAL / tenor.payments);
+  const schedule = Array.from({ length: tenor.payments }, (_, i) => {
+    const d = new Date(ANCHOR);
+    d.setDate(d.getDate() + i * tenor.intervalDays);
+    return { date: formatDate(d), amount: formatRub(perPayment) };
+  });
+
   return (
     <div
       aria-label="Превью оплаты Яндекс Пэй"
@@ -48,8 +87,15 @@ export function YandexPayMock() {
               <ChevronRight className="h-3.5 w-3.5" strokeWidth={2} />
             </div>
             <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1">
-              <span className="text-[15px] font-semibold text-white">
-                3 995&nbsp;₽ × 4 платежа
+              <span className="font-mono text-[15px] font-semibold tabular-nums text-white">
+                {formatRub(perPayment)} × {tenor.payments}{" "}
+                {tenor.payments % 10 === 1 && tenor.payments !== 11
+                  ? "платёж"
+                  : tenor.payments % 10 >= 2 &&
+                      tenor.payments % 10 <= 4 &&
+                      (tenor.payments < 12 || tenor.payments > 14)
+                    ? "платежа"
+                    : "платежей"}
               </span>
               <span className="rounded-md bg-emerald-400 px-1.5 py-[3px] text-[11px] font-semibold leading-none text-emerald-950">
                 без переплат
@@ -58,33 +104,58 @@ export function YandexPayMock() {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-1 rounded-full bg-zinc-800/80 p-1">
-          {tenors.map((t) => (
-            <button
-              type="button"
-              key={t.label}
-              className={cn(
-                "rounded-full py-2 text-[13px] font-medium transition-colors",
-                t.active
-                  ? "bg-black text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
-                  : "text-zinc-400 hover:text-zinc-200",
-              )}
-            >
-              {t.label}
-            </button>
-          ))}
+        <div
+          role="tablist"
+          aria-label="Срок рассрочки"
+          className="grid grid-cols-3 gap-1 rounded-full bg-zinc-800/80 p-1"
+        >
+          {tenors.map((t) => {
+            const active = t.id === tenorId;
+            return (
+              <button
+                type="button"
+                role="tab"
+                aria-selected={active}
+                key={t.id}
+                onClick={() => setTenorId(t.id)}
+                className={cn(
+                  "rounded-full py-2 text-[13px] font-medium transition-colors duration-200",
+                  active
+                    ? "bg-black text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+                    : "text-zinc-400 hover:text-zinc-200",
+                )}
+              >
+                {t.label}
+              </button>
+            );
+          })}
         </div>
 
         <div>
-          <div className="mb-3 flex gap-1.5">
-            <span className="h-[3px] flex-1 rounded-full bg-emerald-400" />
-            <span className="h-[3px] flex-1 rounded-full bg-zinc-700" />
-            <span className="h-[3px] flex-1 rounded-full bg-zinc-700" />
-            <span className="h-[3px] flex-1 rounded-full bg-zinc-700" />
+          <div
+            className="mb-3 grid gap-1.5"
+            style={{
+              gridTemplateColumns: `repeat(${schedule.length}, minmax(0,1fr))`,
+            }}
+          >
+            {schedule.map((p, i) => (
+              <span
+                key={`${p.date}-${i}`}
+                className={cn(
+                  "h-[3px] rounded-full transition-colors duration-200",
+                  i === 0 ? "bg-emerald-400" : "bg-zinc-700",
+                )}
+              />
+            ))}
           </div>
-          <div className="grid grid-cols-4 gap-3">
-            {schedule.map((p) => (
-              <div key={p.date}>
+          <div
+            className="grid gap-3"
+            style={{
+              gridTemplateColumns: `repeat(${schedule.length}, minmax(0,1fr))`,
+            }}
+          >
+            {schedule.map((p, i) => (
+              <div key={`${p.date}-${i}`}>
                 <div className="text-[11px] leading-none text-zinc-500">
                   {p.date}
                 </div>
