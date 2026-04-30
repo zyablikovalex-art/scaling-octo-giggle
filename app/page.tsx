@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TreeShowcase } from "@/components/tree-scroll";
+import { HeroVideo } from "@/components/hero-video";
 
 const trees = [
   {
@@ -46,8 +47,9 @@ const trees = [
 export default function HomePage() {
   return (
     <>
-      <section className="container">
-        <div className="flex flex-col items-center justify-center gap-6 py-24 text-center md:py-36">
+      <section className="relative overflow-hidden">
+        <HeroVideo />
+        <div className="container flex flex-col items-center justify-center gap-6 py-24 text-center md:py-36">
           <span className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1 text-xs font-medium uppercase tracking-widest text-amber-200">
             <Sparkles className="h-3.5 w-3.5" />
             Сезон 2026 уже стартует
