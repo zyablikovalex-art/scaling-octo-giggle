@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, type CSSProperties, type MouseEvent } from "react";
-import { ArrowRight } from "lucide-react";
+import { useState, type CSSProperties } from "react";
 
 import { Button } from "@/components/ui/button";
 
 const HUES = [25, 350, 130, 200, 45, 280, 165];
+const PARTICLES_PER_BURST = 14;
+const BURST_COUNT = 14;
 
 type Burst = {
   id: number;
@@ -15,15 +16,12 @@ type Burst = {
   delay: number;
 };
 
-const PARTICLES_PER_BURST = 14;
-
 export function LetsGoButton() {
   const [bursts, setBursts] = useState<Burst[]>([]);
 
-  const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
+  const handleClick = () => {
     const now = Date.now();
-    const next: Burst[] = Array.from({ length: 14 }, (_, i) => ({
+    const next: Burst[] = Array.from({ length: BURST_COUNT }, (_, i) => ({
       id: now + i,
       x: 8 + Math.random() * 84,
       y: 12 + Math.random() * 70,
@@ -40,14 +38,16 @@ export function LetsGoButton() {
 
   return (
     <>
-      <Button asChild className="whitespace-nowrap px-6">
-        <a href="#assistant" onClick={handleClick}>
-          Поехали
-          <ArrowRight className="ml-1 h-4 w-4" strokeWidth={1.75} />
-        </a>
+      <Button
+        type="button"
+        onClick={handleClick}
+        size="lg"
+        className="px-10 text-base font-semibold"
+      >
+        Поехали
       </Button>
       {bursts.length > 0 && (
-        <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
+        <div className="pointer-events-none fixed inset-0 z-[60] overflow-hidden">
           {bursts.map((b) => (
             <div
               key={b.id}
@@ -56,7 +56,7 @@ export function LetsGoButton() {
                 {
                   left: `${b.x}vw`,
                   top: `${b.y}vh`,
-                  "--hue": b.hue,
+                  "--hue": String(b.hue),
                   "--burst-delay": `${b.delay}ms`,
                 } as CSSProperties
               }
