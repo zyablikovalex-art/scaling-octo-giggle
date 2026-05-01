@@ -13,7 +13,7 @@ export function HeroVideo() {
         muted
         playsInline
         preload="auto"
-        className="h-full w-full scale-105 object-cover blur-[2px] saturate-[0.95]"
+        className="h-full w-full scale-105 object-cover"
       >
         <source src={videoSrc} type="video/mp4" />
       </video>
