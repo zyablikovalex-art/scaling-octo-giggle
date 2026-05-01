@@ -11,11 +11,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { HeroVideo } from "@/components/hero-video";
-import { YandexPayWidget } from "@/components/yandex-pay-widget";
+import { YandexPayMock } from "@/components/yandex-pay-mock";
 import { ChatPanel } from "@/components/chat-widget";
 import { cn } from "@/lib/utils";
-
-export const dynamic = "force-dynamic";
 
 const trees = [
   {
@@ -55,7 +53,6 @@ const stats = [
 ];
 
 export default function HomePage() {
-  const merchantId = process.env.ya_pay_mid;
   return (
     <>
       <section className="relative isolate overflow-hidden">
@@ -124,7 +121,7 @@ export default function HomePage() {
             <p className="mb-3 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
               Оплата
             </p>
-            <YandexPayWidget merchantId={merchantId} />
+            <YandexPayMock />
           </div>
         </div>
       </section>

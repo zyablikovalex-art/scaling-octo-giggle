@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 
@@ -25,10 +24,6 @@ export default function RootLayout({
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
-        <Script
-          src="https://pay.yandex.ru/sdk/v1/pay.js"
-          strategy="afterInteractive"
-        />
       </body>
     </html>
   );
