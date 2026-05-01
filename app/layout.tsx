@@ -18,7 +18,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ru" suppressHydrationWarning className={GeistSans.variable}>
+    <html
+      lang="ru"
+      suppressHydrationWarning
+      className={`${GeistSans.variable} scroll-smooth`}
+    >
       <body className="relative flex min-h-[100dvh] flex-col antialiased">
         <CozyBackground />
         <SiteHeader />
