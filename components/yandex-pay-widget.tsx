@@ -71,6 +71,7 @@ function CashbackLive({ merchantId }: { merchantId: string }) {
             type: "ByToken",
           },
           {
+            onPayButtonClick: () => {},
             onPaymentSuccess: () => {},
             onPaymentError: () => {},
             onAbort: () => {},
