@@ -80,9 +80,14 @@ function CashbackLive({ merchantId }: { merchantId: string }) {
         if (cancelled || !containerRef.current) return;
 
         session.mountWidget(containerRef.current, {
-          widgetType: YaPay.WidgetType?.Info ?? "Info",
+          widgetType: YaPay.WidgetType?.Ultimate ?? "Ultimate",
           widgetTheme: YaPay.WidgetTheme?.Dark ?? "DARK",
           borderRadius: 20,
+          padding: YaPay.WidgetPaddingType?.Default ?? "default",
+          withOutline: false,
+          widgetBackground: YaPay.WidgetBackgroundType?.Default ?? "default",
+          hideWidgetHeader: false,
+          widgetSize: YaPay.WidgetSize?.Medium ?? "medium",
         });
 
         setMounted(true);
