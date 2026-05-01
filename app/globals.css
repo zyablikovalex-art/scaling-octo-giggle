@@ -79,17 +79,17 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 6px;
-  height: 6px;
-  margin-left: -3px;
-  margin-top: -3px;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  margin-top: -2px;
   border-radius: 9999px;
-  background: hsl(var(--hue, 30), 95%, 65%);
+  background: hsl(var(--h, 45), 95%, var(--l, 80%));
   box-shadow:
-    0 0 8px hsl(var(--hue, 30), 95%, 65%),
-    0 0 18px hsl(var(--hue, 30), 95%, 65%);
+    0 0 6px hsla(var(--h, 45), 100%, 88%, 0.95),
+    0 0 18px hsla(var(--h, 45), 100%, 60%, 0.7);
   transform: rotate(var(--a, 0deg)) translateX(0);
-  animation: firework-fly 1.5s cubic-bezier(0.16, 1, 0.3, 1)
+  animation: firework-fly 1.8s cubic-bezier(0.22, 0.95, 0.34, 1)
     var(--burst-delay, 0ms) both;
 }
 
@@ -98,11 +98,11 @@
     transform: rotate(var(--a, 0deg)) translateX(0);
     opacity: 1;
   }
-  80% {
+  70% {
     opacity: 1;
   }
   100% {
-    transform: rotate(var(--a, 0deg)) translateX(160px);
+    transform: rotate(var(--a, 0deg)) translateX(var(--d, 180px));
     opacity: 0;
   }
 }
