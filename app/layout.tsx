@@ -6,7 +6,6 @@ import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CozyBackground } from "@/components/cozy-background";
-import { ChatWidget } from "@/components/chat-widget";
 
 export const metadata: Metadata = {
   title: "Ёлки.Shop — деревья, которые помнят запах детства",
@@ -26,7 +25,6 @@ export default function RootLayout({
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
-        <ChatWidget />
         <Script
           src="https://pay.yandex.ru/sdk/v1/pay.js"
           strategy="afterInteractive"

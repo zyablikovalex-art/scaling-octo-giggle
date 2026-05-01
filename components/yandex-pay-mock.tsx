@@ -77,7 +77,7 @@ function PlusLogo({ className }: { className?: string }) {
 export function YandexPayCashbackMock() {
   return (
     <div
-      className="bg-[#1d1d1d] text-white"
+      className="bg-white/[0.07] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl"
       style={{ borderRadius: 20 }}
       data-testid="cashback-btn-parent"
     >
@@ -119,7 +119,10 @@ export function YandexPaySplitMock() {
   const groupName = "ya-pay-tenor";
 
   return (
-    <div className="bg-[#1d1d1d] text-white" style={{ borderRadius: 20 }}>
+    <div
+      className="bg-white/[0.07] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl"
+      style={{ borderRadius: 20 }}
+    >
       <div className="flex flex-col" style={{ margin: 20, gap: 20 }}>
         <div className="flex items-start" style={{ gap: 12 }}>
           <img
