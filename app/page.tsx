@@ -1,3 +1,6 @@
+import { ArrowRight } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -7,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { HeroVideo } from "@/components/hero-video";
-import { YandexPayMock } from "@/components/yandex-pay-mock";
+import { PlusLogo, SplitLogo } from "@/components/yandex-pay-mock";
 import { ChatPanel } from "@/components/chat-widget";
 
 const trees = [
@@ -45,10 +48,19 @@ function StepBadge({ n }: { n: number }) {
   return (
     <span
       aria-hidden
-      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-amber-300/30 bg-amber-300/10 font-mono text-sm font-semibold tabular-nums text-amber-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-amber-300/30 bg-amber-300/10 font-mono text-sm font-semibold tabular-nums text-amber-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
     >
       {n}
     </span>
+  );
+}
+
+function StepConnector() {
+  return (
+    <span
+      aria-hidden
+      className="block h-6 w-px bg-gradient-to-b from-amber-300/40 to-amber-300/0"
+    />
   );
 }
 
@@ -79,37 +91,50 @@ export default function HomePage() {
             className="fade-up md:col-span-5 md:col-start-8"
             style={{ animationDelay: "240ms" }}
           >
-            <div className="rounded-2xl border border-white/10 bg-card/40 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl md:p-7">
+            <div className="rounded-2xl border border-white/10 bg-card/40 p-6 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl md:p-7">
               <h2 className="text-[15px] font-semibold leading-snug tracking-tight md:text-base">
                 Всего пара шагов до новогодней&nbsp;радости
               </h2>
 
-              <ol className="mt-6 space-y-6">
-                <li className="flex items-start gap-4">
+              <ol className="mt-6 flex flex-col items-center">
+                <li className="flex flex-col items-center">
                   <StepBadge n={1} />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[15px] font-semibold leading-tight">
-                      Выбери ёлку
-                    </p>
-                    <p className="mt-1 text-[13px] leading-snug text-muted-foreground">
-                      Помощник Ёлкин подберёт под потолок и привычки
-                    </p>
-                  </div>
+                  <StepConnector />
+                  <p className="text-[15px] font-semibold leading-tight">
+                    Выбери ёлку
+                  </p>
+                  <p className="mt-1 max-w-[26ch] text-[13px] leading-snug text-muted-foreground">
+                    Помощник Ёлкин подберёт под потолок и привычки
+                  </p>
                 </li>
 
-                <li className="flex items-start gap-4">
+                <StepConnector />
+
+                <li className="flex flex-col items-center">
                   <StepBadge n={2} />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[15px] font-semibold leading-tight">
-                      Оплати удобным способом
-                    </p>
-                    <p className="mt-1 text-[13px] leading-snug text-muted-foreground">
-                      Яндекс&nbsp;Пэй с кешбэком или Сплит без переплат
-                    </p>
-                    <div className="mt-3">
-                      <YandexPayMock compact />
-                    </div>
+                  <StepConnector />
+                  <p className="text-[15px] font-semibold leading-tight">
+                    Оплати удобным способом
+                  </p>
+                  <p className="mt-1 max-w-[26ch] text-[13px] leading-snug text-muted-foreground">
+                    Яндекс&nbsp;Пэй с кешбэком или Сплит без переплат
+                  </p>
+                  <div className="mt-3 flex items-center justify-center gap-4 text-[13px] text-muted-foreground">
+                    <span className="inline-flex items-center gap-1.5">
+                      <PlusLogo className="h-5 w-5" />
+                      Пэй
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <SplitLogo className="h-5 w-5" />
+                      Сплит
+                    </span>
                   </div>
+                  <Button asChild size="sm" className="mt-5">
+                    <a href="#assistant">
+                      Поехали
+                      <ArrowRight className="ml-1 h-4 w-4" strokeWidth={1.75} />
+                    </a>
+                  </Button>
                 </li>
               </ol>
             </div>

@@ -53,7 +53,7 @@ function pluralPayments(n: number) {
   return "платежей";
 }
 
-function PlusLogo({ className }: { className?: string }) {
+export function PlusLogo({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 87 86" className={className} aria-hidden>
       <defs>
@@ -71,6 +71,17 @@ function PlusLogo({ className }: { className?: string }) {
         strokeLinecap="round"
       />
     </svg>
+  );
+}
+
+export function SplitLogo({ className }: { className?: string }) {
+  return (
+    <img
+      src="https://yastatic.net/s3/pay-static/yandex-pay/frames/_/split-logo.8a4cff28.png"
+      alt=""
+      className={className}
+      loading="lazy"
+    />
   );
 }
 
