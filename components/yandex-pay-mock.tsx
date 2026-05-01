@@ -74,26 +74,79 @@ function PlusLogo({ className }: { className?: string }) {
   );
 }
 
-export function YandexPayCashbackMock() {
+type Sizes = {
+  pad: number;
+  gap: number;
+  innerGap: number;
+  radius: number;
+  logo: string;
+  chevron: string;
+  caption: string;
+  title: string;
+  pillText: string;
+  tabText: string;
+  tabPad: string;
+  scheduleDate: string;
+  scheduleAmount: string;
+};
+
+const SIZES: { regular: Sizes; compact: Sizes } = {
+  regular: {
+    pad: 20,
+    gap: 20,
+    innerGap: 12,
+    radius: 20,
+    logo: "h-7 w-7",
+    chevron: "h-[14px] w-[14px]",
+    caption: "text-[13px]",
+    title: "text-[15px]",
+    pillText: "text-[11px]",
+    tabText: "text-[14px]",
+    tabPad: "py-2",
+    scheduleDate: "text-[12px]",
+    scheduleAmount: "text-[14px]",
+  },
+  compact: {
+    pad: 13,
+    gap: 13,
+    innerGap: 9,
+    radius: 14,
+    logo: "h-5 w-5",
+    chevron: "h-[11px] w-[11px]",
+    caption: "text-[10px]",
+    title: "text-[12px]",
+    pillText: "text-[9px]",
+    tabText: "text-[11px]",
+    tabPad: "py-1.5",
+    scheduleDate: "text-[10px]",
+    scheduleAmount: "text-[11px]",
+  },
+};
+
+export function YandexPayCashbackMock({ compact = false }: { compact?: boolean }) {
+  const s = compact ? SIZES.compact : SIZES.regular;
   return (
     <div
       className="bg-white/[0.07] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl"
-      style={{ borderRadius: 20 }}
+      style={{ borderRadius: s.radius }}
       data-testid="cashback-btn-parent"
     >
-      <div className="flex items-center" style={{ margin: 20, gap: 12 }}>
-        <PlusLogo className="h-7 w-7 shrink-0" />
+      <div
+        className="flex items-center"
+        style={{ margin: s.pad, gap: s.innerGap }}
+      >
+        <PlusLogo className={cn("shrink-0", s.logo)} />
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex items-center gap-1">
-            <span className="text-[13px] leading-tight text-zinc-400">
+            <span className={cn("leading-tight text-zinc-400", s.caption)}>
               Яндекс&nbsp;Пэй — оплата с&nbsp;кешбэком
             </span>
             <ChevronRight
-              className="h-[14px] w-[14px] text-zinc-500"
+              className={cn("text-zinc-500", s.chevron)}
               strokeWidth={2}
             />
           </div>
-          <span className="mt-0.5 text-[15px] font-semibold leading-tight">
+          <span className={cn("mt-0.5 font-semibold leading-tight", s.title)}>
             1278 баллов Плюса
           </span>
         </div>
@@ -102,7 +155,8 @@ export function YandexPayCashbackMock() {
   );
 }
 
-export function YandexPaySplitMock() {
+export function YandexPaySplitMock({ compact = false }: { compact?: boolean }) {
+  const s = compact ? SIZES.compact : SIZES.regular;
   const [tenorId, setTenorId] = useState<TenorId>("2m");
   const tenor = tenors.find((t) => t.id === tenorId) ?? tenors[0];
 
@@ -116,39 +170,44 @@ export function YandexPaySplitMock() {
     return { perPayment: per, schedule: sched };
   }, [tenor.payments, tenor.intervalDays]);
 
-  const groupName = "ya-pay-tenor";
+  const groupName = compact ? "ya-pay-tenor-compact" : "ya-pay-tenor";
 
   return (
     <div
       className="bg-white/[0.07] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-3xl backdrop-saturate-150"
-      style={{ borderRadius: 20 }}
+      style={{ borderRadius: s.radius }}
     >
-      <div className="flex flex-col" style={{ margin: 20, gap: 20 }}>
-        <div className="flex items-start" style={{ gap: 12 }}>
+      <div className="flex flex-col" style={{ margin: s.pad, gap: s.gap }}>
+        <div className="flex items-start" style={{ gap: s.innerGap }}>
           <img
             src="https://yastatic.net/s3/pay-static/yandex-pay/frames/_/split-logo.8a4cff28.png"
             alt=""
-            className="h-7 w-7 shrink-0"
+            className={cn("shrink-0", s.logo)}
             loading="lazy"
           />
           <div className="flex min-w-0 flex-1 flex-col">
             <div className="flex items-center gap-1">
-              <span className="text-[13px] leading-tight text-zinc-400">
+              <span className={cn("leading-tight text-zinc-400", s.caption)}>
                 Сплит
               </span>
               <ChevronRight
-                className="h-[14px] w-[14px] text-zinc-500"
+                className={cn("text-zinc-500", s.chevron)}
                 strokeWidth={2}
               />
             </div>
-            <span className="mt-0.5 text-[15px] font-semibold leading-snug">
+            <span
+              className={cn("mt-0.5 font-semibold leading-snug", s.title)}
+            >
               <span className="tabular-nums">{formatRub(perPayment)}</span>{" "}
               ×{" "}
               <span className="tabular-nums">
                 {tenor.payments} {pluralPayments(tenor.payments)}
               </span>{" "}
               <span
-                className="ml-1 inline-flex items-center rounded-md bg-emerald-400 px-1.5 py-[2px] align-middle text-[11px] font-semibold leading-none text-emerald-950"
+                className={cn(
+                  "ml-1 inline-flex items-center rounded-md bg-emerald-400 px-1.5 py-[2px] align-middle font-semibold leading-none text-emerald-950",
+                  s.pillText,
+                )}
                 style={{ transform: "translateY(-1px)" }}
               >
                 без переплат
@@ -168,7 +227,9 @@ export function YandexPaySplitMock() {
               <label
                 key={t.id}
                 className={cn(
-                  "relative flex cursor-pointer items-center justify-center rounded-full py-2 text-[14px] font-semibold transition-colors duration-150",
+                  "relative flex cursor-pointer items-center justify-center rounded-full font-semibold transition-colors duration-150",
+                  s.tabPad,
+                  s.tabText,
                   active
                     ? "bg-black text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
                     : "text-zinc-400 hover:text-zinc-200",
@@ -193,7 +254,7 @@ export function YandexPaySplitMock() {
           className="grid"
           style={{
             gridTemplateColumns: `repeat(${schedule.length}, minmax(0, 1fr))`,
-            columnGap: 12,
+            columnGap: compact ? 8 : 12,
           }}
         >
           {schedule.map((p, i) => {
@@ -210,10 +271,20 @@ export function YandexPaySplitMock() {
                     active ? "bg-emerald-400" : "bg-zinc-700",
                   )}
                 />
-                <span className="text-[12px] leading-none text-zinc-500">
+                <span
+                  className={cn(
+                    "leading-none text-zinc-500",
+                    s.scheduleDate,
+                  )}
+                >
                   {p.date}
                 </span>
-                <span className="text-[14px] font-semibold leading-tight tabular-nums">
+                <span
+                  className={cn(
+                    "font-semibold leading-tight tabular-nums",
+                    s.scheduleAmount,
+                  )}
+                >
                   {p.amount}
                 </span>
               </div>
@@ -225,14 +296,17 @@ export function YandexPaySplitMock() {
   );
 }
 
-export function YandexPayMock() {
+export function YandexPayMock({ compact = false }: { compact?: boolean }) {
   return (
     <div
       aria-label="Превью оплаты Яндекс Пэй"
-      className="flex flex-col gap-3 text-left"
+      className={cn(
+        "flex flex-col text-left",
+        compact ? "gap-2" : "gap-3",
+      )}
     >
-      <YandexPayCashbackMock />
-      <YandexPaySplitMock />
+      <YandexPayCashbackMock compact={compact} />
+      <YandexPaySplitMock compact={compact} />
     </div>
   );
 }
