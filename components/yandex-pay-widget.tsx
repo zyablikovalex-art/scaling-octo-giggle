@@ -127,6 +127,15 @@ function CashbackLive({ merchantId }: { merchantId: string }) {
 }
 
 export function YandexPayWidget({ merchantId }: Props) {
+  useEffect(() => {
+    if (typeof console !== "undefined") {
+      console.info(
+        "[YaPay] widget received merchantId:",
+        merchantId ? `"${merchantId}"` : "(undefined — env var missing or not deployed)",
+      );
+    }
+  }, [merchantId]);
+
   return (
     <div
       aria-label="Превью оплаты Яндекс Пэй"
