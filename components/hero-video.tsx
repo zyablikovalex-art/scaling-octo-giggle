@@ -7,9 +7,16 @@ const videoSrc =
 
 const TRIM_START_SEC = 4.5;
 const TRIM_END_SEC = 2;
-const FORWARD_EASE_SEC = 0.4;
-const REVERSE_DURATION_SEC = 1.5;
-const MIN_SPEED = 0.12;
+const EASE_DURATION_SEC = 1.5;
+const MIN_RATE = 0.0625;
+
+type Phase =
+  | "F_CRUISE"
+  | "F_DECEL"
+  | "R_ACCEL"
+  | "R_CRUISE"
+  | "R_DECEL"
+  | "F_ACCEL";
 
 export function HeroVideo() {
   const ref = useRef<HTMLVideoElement>(null);
@@ -19,55 +26,87 @@ export function HeroVideo() {
     if (!v) return;
 
     let raf = 0;
-    let dir: 1 | -1 = 1;
-    let reverseStartTs = 0;
-    let reverseFromSec = 0;
+    let phase: Phase = "F_CRUISE";
+    let phaseEnteredAt = 0;
+    let phaseEnteredClip = 0;
 
     const bounds = () => {
       const start = TRIM_START_SEC;
-      const end = Math.max((v.duration || 0) - TRIM_END_SEC, start + 0.5);
+      const end = Math.max(
+        (v.duration || 0) - TRIM_END_SEC,
+        start + EASE_DURATION_SEC * 2 + 0.5,
+      );
       return { start, end };
     };
 
-    const goForward = () => {
-      dir = 1;
-      v.playbackRate = 1;
-      v.play().catch(() => {});
-    };
-
-    const goReverse = (fromSec: number) => {
-      dir = -1;
-      try {
-        v.pause();
-      } catch {}
-      reverseStartTs = performance.now();
-      reverseFromSec = fromSec;
+    const setPhase = (p: Phase) => {
+      phase = p;
+      phaseEnteredAt = performance.now();
+      phaseEnteredClip = v.currentTime;
+      if (p === "F_CRUISE") {
+        v.playbackRate = 1;
+        v.play().catch(() => {});
+      } else if (p === "F_DECEL" || p === "F_ACCEL") {
+        v.play().catch(() => {});
+      } else {
+        try {
+          v.pause();
+        } catch {}
+      }
     };
 
     const tick = (t: number) => {
       const { start, end } = bounds();
-      if (dir > 0) {
-        const distEdge = end - v.currentTime;
-        const target =
-          distEdge < FORWARD_EASE_SEC
-            ? Math.max(MIN_SPEED, distEdge / FORWARD_EASE_SEC)
-            : 1;
-        if (Math.abs(v.playbackRate - target) > 0.01) v.playbackRate = target;
-        if (v.currentTime >= end - 0.01) {
-          v.currentTime = end;
-          goReverse(end);
+      const elapsed = (t - phaseEnteredAt) / 1000;
+      const u = Math.min(1, elapsed / EASE_DURATION_SEC);
+      const cruiseHalf = EASE_DURATION_SEC / 2;
+
+      switch (phase) {
+        case "F_CRUISE": {
+          if (v.currentTime >= end - cruiseHalf) setPhase("F_DECEL");
+          break;
         }
-      } else {
-        const elapsed = (t - reverseStartTs) / 1000;
-        const progress = Math.min(1, elapsed / REVERSE_DURATION_SEC);
-        const eased = 0.5 - 0.5 * Math.cos(Math.PI * progress);
-        const next = reverseFromSec - (reverseFromSec - start) * eased;
-        v.currentTime = next;
-        if (progress >= 1) {
-          v.currentTime = start;
-          goForward();
+        case "F_DECEL": {
+          const rate = Math.max(MIN_RATE, 1 - u);
+          if (Math.abs(v.playbackRate - rate) > 0.005) v.playbackRate = rate;
+          if (u >= 1) {
+            v.currentTime = end;
+            setPhase("R_ACCEL");
+          }
+          break;
+        }
+        case "R_ACCEL": {
+          const dist = (elapsed * elapsed) / (2 * EASE_DURATION_SEC);
+          v.currentTime = Math.max(start, phaseEnteredClip - dist);
+          if (u >= 1) setPhase("R_CRUISE");
+          break;
+        }
+        case "R_CRUISE": {
+          v.currentTime = Math.max(start, phaseEnteredClip - elapsed);
+          if (v.currentTime <= start + cruiseHalf) setPhase("R_DECEL");
+          break;
+        }
+        case "R_DECEL": {
+          const dist =
+            elapsed - (elapsed * elapsed) / (2 * EASE_DURATION_SEC);
+          v.currentTime = Math.max(start, phaseEnteredClip - dist);
+          if (u >= 1) {
+            v.currentTime = start;
+            setPhase("F_ACCEL");
+          }
+          break;
+        }
+        case "F_ACCEL": {
+          const rate = Math.max(MIN_RATE, u);
+          if (Math.abs(v.playbackRate - rate) > 0.005) v.playbackRate = rate;
+          if (u >= 1) {
+            v.playbackRate = 1;
+            setPhase("F_CRUISE");
+          }
+          break;
         }
       }
+
       raf = requestAnimationFrame(tick);
     };
 
@@ -75,7 +114,7 @@ export function HeroVideo() {
       cancelAnimationFrame(raf);
       const { start } = bounds();
       v.currentTime = start;
-      goForward();
+      setPhase("F_CRUISE");
       raf = requestAnimationFrame(tick);
     };
 
