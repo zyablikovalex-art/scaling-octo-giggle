@@ -120,7 +120,7 @@ export function YandexPaySplitMock() {
 
   return (
     <div
-      className="bg-white/[0.07] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl"
+      className="bg-white/[0.07] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-3xl backdrop-saturate-150"
       style={{ borderRadius: 20 }}
     >
       <div className="flex flex-col" style={{ margin: 20, gap: 20 }}>
