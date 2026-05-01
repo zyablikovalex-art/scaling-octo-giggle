@@ -5,9 +5,10 @@ import { useEffect, useRef } from "react";
 const videoSrc =
   process.env.NEXT_PUBLIC_HERO_VIDEO_URL || "/hero-bg.mp4";
 
+const TRIM_START_SEC = 4.5;
 const TRIM_END_SEC = 2;
 const EASE_WINDOW_SEC = 0.9;
-const MIN_SPEED = 0.06;
+const MIN_SPEED = 0.0625;
 
 export function HeroVideo() {
   const ref = useRef<HTMLVideoElement>(null);
@@ -18,45 +19,76 @@ export function HeroVideo() {
 
     let raf = 0;
     let dir: 1 | -1 = 1;
-    let last = 0;
+    let lastTs = 0;
 
-    const tick = (t: number) => {
-      const dt = Math.min(0.05, (t - last) / 1000);
-      last = t;
-
-      const end = Math.max((v.duration || 0) - TRIM_END_SEC, 0.1);
-      const distEdge = dir > 0 ? end - v.currentTime : v.currentTime;
-      const speed = Math.max(MIN_SPEED, Math.min(1, distEdge / EASE_WINDOW_SEC));
-
-      let next = v.currentTime + dir * dt * speed;
-      if (next >= end) {
-        next = end;
-        dir = -1;
-      } else if (next <= 0) {
-        next = 0;
-        dir = 1;
-      }
-      v.currentTime = next;
-
-      raf = requestAnimationFrame(tick);
+    const bounds = () => {
+      const start = TRIM_START_SEC;
+      const end = Math.max((v.duration || 0) - TRIM_END_SEC, start + 0.5);
+      return { start, end };
     };
 
-    const start = () => {
+    const speedFor = (current: number, d: 1 | -1, start: number, end: number) => {
+      const distEdge = d > 0 ? end - current : current - start;
+      return Math.max(MIN_SPEED, Math.min(1, distEdge / EASE_WINDOW_SEC));
+    };
+
+    const goForward = () => {
+      dir = 1;
+      v.playbackRate = 1;
+      v.play().catch(() => {});
+    };
+
+    const goReverse = () => {
+      dir = -1;
       try {
         v.pause();
       } catch {}
-      v.currentTime = 0;
-      cancelAnimationFrame(raf);
-      last = performance.now();
+      lastTs = performance.now();
+    };
+
+    const tick = (t: number) => {
+      const { start, end } = bounds();
+      if (dir > 0) {
+        if (v.currentTime >= end - 0.01) {
+          v.currentTime = end;
+          goReverse();
+        } else {
+          const target = speedFor(v.currentTime, 1, start, end);
+          if (Math.abs(v.playbackRate - target) > 0.01) v.playbackRate = target;
+        }
+      } else {
+        const dt = Math.min(0.05, (t - lastTs) / 1000);
+        lastTs = t;
+        const s = speedFor(v.currentTime, -1, start, end);
+        let next = v.currentTime - dt * s;
+        if (next <= start) {
+          v.currentTime = start;
+          goForward();
+        } else {
+          v.currentTime = next;
+        }
+      }
       raf = requestAnimationFrame(tick);
     };
 
-    if (v.readyState >= 1 && Number.isFinite(v.duration)) start();
-    else v.addEventListener("loadedmetadata", start, { once: true });
+    const init = () => {
+      cancelAnimationFrame(raf);
+      const { start } = bounds();
+      v.currentTime = start;
+      goForward();
+      lastTs = performance.now();
+      raf = requestAnimationFrame(tick);
+    };
+
+    if (v.readyState >= 1 && Number.isFinite(v.duration)) init();
+    else v.addEventListener("loadedmetadata", init, { once: true });
 
     return () => {
-      v.removeEventListener("loadedmetadata", start);
+      v.removeEventListener("loadedmetadata", init);
       cancelAnimationFrame(raf);
+      try {
+        v.pause();
+      } catch {}
     };
   }, []);
 
