@@ -1,6 +1,3 @@
-import { ArrowRight } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -12,6 +9,7 @@ import {
 import { HeroVideo } from "@/components/hero-video";
 import { PlusLogo, SplitLogo } from "@/components/yandex-pay-mock";
 import { ChatPanel } from "@/components/chat-widget";
+import { LetsGoButton } from "@/components/lets-go-button";
 
 const trees = [
   {
@@ -59,7 +57,7 @@ function StepConnector() {
   return (
     <span
       aria-hidden
-      className="block h-6 w-px bg-gradient-to-b from-amber-300/40 to-amber-300/0"
+      className="block h-7 w-[2px] bg-gradient-to-b from-amber-300/50 to-amber-300/0"
     />
   );
 }
@@ -129,12 +127,12 @@ export default function HomePage() {
                       Сплит
                     </span>
                   </div>
-                  <Button asChild size="sm" className="mt-5">
-                    <a href="#assistant">
-                      Поехали
-                      <ArrowRight className="ml-1 h-4 w-4" strokeWidth={1.75} />
-                    </a>
-                  </Button>
+                  <div className="mt-5">
+                    <StepConnector />
+                  </div>
+                  <div className="mt-3">
+                    <LetsGoButton />
+                  </div>
                 </li>
               </ol>
             </div>
