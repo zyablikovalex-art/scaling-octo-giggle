@@ -11,10 +11,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { HeroVideo } from "@/components/hero-video";
-import { YandexPayWidget } from "@/components/yandex-pay-widget";
+import { YandexPayMock } from "@/components/yandex-pay-mock";
+import { ChatPanel } from "@/components/chat-widget";
 import { cn } from "@/lib/utils";
-
-export const dynamic = "force-dynamic";
 
 const trees = [
   {
@@ -54,7 +53,6 @@ const stats = [
 ];
 
 export default function HomePage() {
-  const merchantId = process.env.ya_pay_mid;
   return (
     <>
       <section className="relative isolate overflow-hidden">
@@ -123,7 +121,63 @@ export default function HomePage() {
             <p className="mb-3 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
               Оплата
             </p>
-            <YandexPayWidget merchantId={merchantId} />
+            <YandexPayMock />
+          </div>
+        </div>
+      </section>
+
+      <section id="assistant" className="relative">
+        <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
+          <div className="grid grid-cols-1 items-center gap-x-16 gap-y-10 md:grid-cols-12">
+            <div className="md:col-span-7">
+              <p className="text-[11px] uppercase tracking-[0.22em] text-emerald-300/80">
+                AI-консультант
+              </p>
+              <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tighter md:text-5xl">
+                Не откладывай вопрос
+                <br />
+                до выходных.
+              </h2>
+              <p className="mt-5 max-w-[52ch] text-base leading-relaxed text-muted-foreground md:text-lg">
+                Ёлкин — это AI-помощник на базе Llama&nbsp;3.3 через Groq.
+                Помнит весь ассортимент, считает доставку под твой район
+                и не теряет нить разговора. Отвечает за секунды, в любое время —
+                включая третий час ночи 31 декабря.
+              </p>
+              <ul className="mt-7 space-y-3 text-sm text-muted-foreground md:text-base">
+                <li className="flex items-start gap-3">
+                  <span
+                    aria-hidden
+                    className="mt-[7px] block h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400"
+                  />
+                  <span>
+                    Подскажет высоту под потолок и тип хвои под аллергии в семье.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span
+                    aria-hidden
+                    className="mt-[7px] block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-300"
+                  />
+                  <span>
+                    Назовёт реальную цену с учётом сезона и партии — без звонка
+                    менеджеру.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span
+                    aria-hidden
+                    className="mt-[7px] block h-1.5 w-1.5 shrink-0 rounded-full bg-rose-400"
+                  />
+                  <span>
+                    Если нужен живой человек — переключит, не уронив контекст.
+                  </span>
+                </li>
+              </ul>
+            </div>
+            <div className="md:col-span-5">
+              <ChatPanel />
+            </div>
           </div>
         </div>
       </section>
