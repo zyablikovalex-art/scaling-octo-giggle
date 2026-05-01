@@ -7,8 +7,9 @@ const videoSrc =
 
 const TRIM_START_SEC = 4.5;
 const TRIM_END_SEC = 2;
-const EASE_WINDOW_SEC = 0.9;
-const MIN_SPEED = 0.0625;
+const FORWARD_EASE_SEC = 0.4;
+const REVERSE_DURATION_SEC = 1.5;
+const MIN_SPEED = 0.12;
 
 export function HeroVideo() {
   const ref = useRef<HTMLVideoElement>(null);
@@ -19,17 +20,13 @@ export function HeroVideo() {
 
     let raf = 0;
     let dir: 1 | -1 = 1;
-    let lastTs = 0;
+    let reverseStartTs = 0;
+    let reverseFromSec = 0;
 
     const bounds = () => {
       const start = TRIM_START_SEC;
       const end = Math.max((v.duration || 0) - TRIM_END_SEC, start + 0.5);
       return { start, end };
-    };
-
-    const speedFor = (current: number, d: 1 | -1, start: number, end: number) => {
-      const distEdge = d > 0 ? end - current : current - start;
-      return Math.max(MIN_SPEED, Math.min(1, distEdge / EASE_WINDOW_SEC));
     };
 
     const goForward = () => {
@@ -38,34 +35,37 @@ export function HeroVideo() {
       v.play().catch(() => {});
     };
 
-    const goReverse = () => {
+    const goReverse = (fromSec: number) => {
       dir = -1;
       try {
         v.pause();
       } catch {}
-      lastTs = performance.now();
+      reverseStartTs = performance.now();
+      reverseFromSec = fromSec;
     };
 
     const tick = (t: number) => {
       const { start, end } = bounds();
       if (dir > 0) {
+        const distEdge = end - v.currentTime;
+        const target =
+          distEdge < FORWARD_EASE_SEC
+            ? Math.max(MIN_SPEED, distEdge / FORWARD_EASE_SEC)
+            : 1;
+        if (Math.abs(v.playbackRate - target) > 0.01) v.playbackRate = target;
         if (v.currentTime >= end - 0.01) {
           v.currentTime = end;
-          goReverse();
-        } else {
-          const target = speedFor(v.currentTime, 1, start, end);
-          if (Math.abs(v.playbackRate - target) > 0.01) v.playbackRate = target;
+          goReverse(end);
         }
       } else {
-        const dt = Math.min(0.05, (t - lastTs) / 1000);
-        lastTs = t;
-        const s = speedFor(v.currentTime, -1, start, end);
-        let next = v.currentTime - dt * s;
-        if (next <= start) {
+        const elapsed = (t - reverseStartTs) / 1000;
+        const progress = Math.min(1, elapsed / REVERSE_DURATION_SEC);
+        const eased = 0.5 - 0.5 * Math.cos(Math.PI * progress);
+        const next = reverseFromSec - (reverseFromSec - start) * eased;
+        v.currentTime = next;
+        if (progress >= 1) {
           v.currentTime = start;
           goForward();
-        } else {
-          v.currentTime = next;
         }
       }
       raf = requestAnimationFrame(tick);
@@ -76,7 +76,6 @@ export function HeroVideo() {
       const { start } = bounds();
       v.currentTime = start;
       goForward();
-      lastTs = performance.now();
       raf = requestAnimationFrame(tick);
     };
 
