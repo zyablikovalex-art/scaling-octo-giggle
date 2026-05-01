@@ -14,6 +14,8 @@ import { HeroVideo } from "@/components/hero-video";
 import { YandexPayWidget } from "@/components/yandex-pay-widget";
 import { cn } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 const trees = [
   {
     name: "Сосна обыкновенная",
