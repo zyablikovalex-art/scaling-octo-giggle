@@ -1,81 +1,107 @@
 "use client";
 
-import { useState, type CSSProperties, type MouseEvent } from "react";
-import { ArrowRight } from "lucide-react";
+import { useEffect, useState, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
 
 import { Button } from "@/components/ui/button";
 
-const HUES = [25, 350, 130, 200, 45, 280, 165];
+const PARTICLES_PER_BURST = 14;
+const BURST_COUNT = 24;
+
+type Particle = {
+  angle: number;
+  distance: number;
+  hue: number;
+  lightness: number;
+};
 
 type Burst = {
   id: number;
   x: number;
   y: number;
-  hue: number;
   delay: number;
+  particles: Particle[];
 };
 
-const PARTICLES_PER_BURST = 14;
+function makeBursts(): Burst[] {
+  const now = Date.now();
+  return Array.from({ length: BURST_COUNT }, (_, i) => ({
+    id: now + i,
+    x: 4 + Math.random() * 92,
+    y: 6 + Math.random() * 84,
+    delay: Math.floor(Math.random() * 750),
+    particles: Array.from({ length: PARTICLES_PER_BURST }, (_, p) => ({
+      angle:
+        (p * 360) / PARTICLES_PER_BURST + (Math.random() * 18 - 9),
+      distance: 130 + Math.random() * 130,
+      hue: 38 + Math.random() * 18,
+      lightness: 72 + Math.random() * 18,
+    })),
+  }));
+}
 
 export function LetsGoButton() {
   const [bursts, setBursts] = useState<Burst[]>([]);
+  const [mounted, setMounted] = useState(false);
 
-  const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const now = Date.now();
-    const next: Burst[] = Array.from({ length: 14 }, (_, i) => ({
-      id: now + i,
-      x: 8 + Math.random() * 84,
-      y: 12 + Math.random() * 70,
-      hue: HUES[Math.floor(Math.random() * HUES.length)],
-      delay: Math.floor(Math.random() * 500),
-    }));
-    setBursts(next);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handleClick = () => {
+    setBursts(makeBursts());
     document.getElementById("assistant")?.scrollIntoView({
       behavior: "smooth",
       block: "start",
     });
-    window.setTimeout(() => setBursts([]), 2300);
+    window.setTimeout(() => setBursts([]), 2600);
   };
 
   return (
     <>
-      <Button asChild className="whitespace-nowrap px-6">
-        <a href="#assistant" onClick={handleClick}>
-          Поехали
-          <ArrowRight className="ml-1 h-4 w-4" strokeWidth={1.75} />
-        </a>
+      <Button
+        type="button"
+        onClick={handleClick}
+        size="lg"
+        className="px-10 text-base font-semibold"
+      >
+        Поехали
       </Button>
-      {bursts.length > 0 && (
-        <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
-          {bursts.map((b) => (
-            <div
-              key={b.id}
-              className="firework-burst"
-              style={
-                {
-                  left: `${b.x}vw`,
-                  top: `${b.y}vh`,
-                  "--hue": b.hue,
-                  "--burst-delay": `${b.delay}ms`,
-                } as CSSProperties
-              }
-            >
-              {Array.from({ length: PARTICLES_PER_BURST }).map((_, p) => (
-                <span
-                  key={p}
-                  className="firework-particle"
-                  style={
-                    {
-                      "--a": `${(p * 360) / PARTICLES_PER_BURST}deg`,
-                    } as CSSProperties
-                  }
-                />
-              ))}
-            </div>
-          ))}
-        </div>
-      )}
+      {mounted &&
+        bursts.length > 0 &&
+        createPortal(
+          <div className="pointer-events-none fixed inset-0 z-[100] overflow-hidden">
+            {bursts.map((b) => (
+              <div
+                key={b.id}
+                className="firework-burst"
+                style={
+                  {
+                    left: `${b.x}vw`,
+                    top: `${b.y}vh`,
+                    "--burst-delay": `${b.delay}ms`,
+                  } as CSSProperties
+                }
+              >
+                {b.particles.map((p, i) => (
+                  <span
+                    key={i}
+                    className="firework-particle"
+                    style={
+                      {
+                        "--a": `${p.angle}deg`,
+                        "--d": `${p.distance}px`,
+                        "--h": String(p.hue),
+                        "--l": `${p.lightness}%`,
+                      } as CSSProperties
+                    }
+                  />
+                ))}
+              </div>
+            ))}
+          </div>,
+          document.body,
+        )}
     </>
   );
 }
