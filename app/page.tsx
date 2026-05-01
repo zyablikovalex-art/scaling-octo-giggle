@@ -1,7 +1,3 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -13,7 +9,6 @@ import {
 import { HeroVideo } from "@/components/hero-video";
 import { YandexPayMock } from "@/components/yandex-pay-mock";
 import { ChatPanel } from "@/components/chat-widget";
-import { cn } from "@/lib/utils";
 
 const trees = [
   {
@@ -46,11 +41,16 @@ const trees = [
   },
 ];
 
-const stats = [
-  { value: "11 847", label: "ёлок продано в сезоне 2024/25" },
-  { value: "36 ч", label: "медианное время от заказа до двери" },
-  { value: "94.3%", label: "клиентов вернулись через год" },
-];
+function StepBadge({ n }: { n: number }) {
+  return (
+    <span
+      aria-hidden
+      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-amber-300/30 bg-amber-300/10 font-mono text-sm font-semibold tabular-nums text-amber-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+    >
+      {n}
+    </span>
+  );
+}
 
 export default function HomePage() {
   return (
@@ -59,69 +59,60 @@ export default function HomePage() {
         <HeroVideo />
         <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-x-16 gap-y-14 px-6 pb-24 pt-28 md:grid-cols-12 md:pb-32 md:pt-40">
           <div className="md:col-span-7 lg:col-span-7">
-            <span className="fade-up inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.22em] text-amber-200/90 backdrop-blur-sm">
-              Сезон 2025/26 открыт
-            </span>
-            <h1
-              className="fade-up mt-6 text-4xl font-semibold leading-[1.05] tracking-tighter md:text-6xl"
-              style={{ animationDelay: "80ms" }}
-            >
+            <h1 className="fade-up text-4xl font-semibold leading-[1.05] tracking-tighter md:text-6xl">
               Ёлки, которые помнят
               <br />
               запах детства.
             </h1>
             <p
               className="fade-up mt-6 max-w-[58ch] text-base leading-relaxed text-muted-foreground md:text-lg"
-              style={{ animationDelay: "160ms" }}
+              style={{ animationDelay: "120ms" }}
             >
               Срубили во вторник под Владимиром — стоят у тебя в пятницу.
               Каждое дерево с биркой питомника, в стрейч-сетке, с ровным срезом
               под подставку. Хвоя живая, осыпь минимальная, аромат —
               в первые двадцать минут после распаковки.
             </p>
-            <dl
-              className="fade-up mt-7 flex flex-wrap items-baseline gap-x-6 gap-y-2 text-sm text-muted-foreground"
-              style={{ animationDelay: "200ms" }}
-            >
-              {stats.map((s, i) => (
-                <div
-                  key={s.label}
-                  className={cn(
-                    "flex items-baseline gap-2",
-                    i > 0 && "border-l border-border/50 pl-6",
-                  )}
-                >
-                  <dt className="font-mono text-base font-semibold tabular-nums text-amber-100">
-                    {s.value}
-                  </dt>
-                  <dd>{s.label}</dd>
-                </div>
-              ))}
-            </dl>
-            <div
-              className="fade-up mt-9 flex flex-col gap-3 sm:flex-row"
-              style={{ animationDelay: "240ms" }}
-            >
-              <Button asChild size="lg">
-                <Link href="#assortment">
-                  Смотреть ассортимент
-                  <ArrowRight className="ml-1 h-4 w-4" strokeWidth={1.75} />
-                </Link>
-              </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link href="/contacts">Стать партнёром</Link>
-              </Button>
-            </div>
           </div>
 
           <div
             className="fade-up md:col-span-5 md:col-start-8"
-            style={{ animationDelay: "320ms" }}
+            style={{ animationDelay: "240ms" }}
           >
-            <p className="mb-3 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-              Оплата
-            </p>
-            <YandexPayMock />
+            <div className="rounded-2xl border border-white/10 bg-card/40 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl md:p-7">
+              <h2 className="text-[15px] font-semibold leading-snug tracking-tight md:text-base">
+                Всего пара шагов до новогодней&nbsp;радости
+              </h2>
+
+              <ol className="mt-6 space-y-6">
+                <li className="flex items-start gap-4">
+                  <StepBadge n={1} />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[15px] font-semibold leading-tight">
+                      Выбери ёлку
+                    </p>
+                    <p className="mt-1 text-[13px] leading-snug text-muted-foreground">
+                      Помощник Ёлкин подберёт под потолок и привычки
+                    </p>
+                  </div>
+                </li>
+
+                <li className="flex items-start gap-4">
+                  <StepBadge n={2} />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[15px] font-semibold leading-tight">
+                      Оплати удобным способом
+                    </p>
+                    <p className="mt-1 text-[13px] leading-snug text-muted-foreground">
+                      Яндекс&nbsp;Пэй с кешбэком или Сплит без переплат
+                    </p>
+                    <div className="mt-3">
+                      <YandexPayMock compact />
+                    </div>
+                  </div>
+                </li>
+              </ol>
+            </div>
           </div>
         </div>
       </section>
