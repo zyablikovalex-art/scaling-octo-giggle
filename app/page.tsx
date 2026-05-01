@@ -11,6 +11,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { HeroVideo } from "@/components/hero-video";
+import { YandexPayWidget } from "@/components/yandex-pay-widget";
+import { cn } from "@/lib/utils";
 
 const trees = [
   {
@@ -50,11 +52,12 @@ const stats = [
 ];
 
 export default function HomePage() {
+  const merchantId = process.env.ya_pay_mid;
   return (
     <>
       <section className="relative isolate overflow-hidden">
         <HeroVideo />
-        <div className="mx-auto grid max-w-7xl grid-cols-1 items-end gap-x-16 gap-y-14 px-6 pb-24 pt-28 md:grid-cols-12 md:pb-32 md:pt-40">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-x-16 gap-y-14 px-6 pb-24 pt-28 md:grid-cols-12 md:pb-32 md:pt-40">
           <div className="md:col-span-7 lg:col-span-7">
             <span className="fade-up inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.22em] text-amber-200/90 backdrop-blur-sm">
               Сезон 2025/26 открыт
@@ -76,6 +79,25 @@ export default function HomePage() {
               под подставку. Хвоя живая, осыпь минимальная, аромат —
               в первые двадцать минут после распаковки.
             </p>
+            <dl
+              className="fade-up mt-7 flex flex-wrap items-baseline gap-x-6 gap-y-2 text-sm text-muted-foreground"
+              style={{ animationDelay: "200ms" }}
+            >
+              {stats.map((s, i) => (
+                <div
+                  key={s.label}
+                  className={cn(
+                    "flex items-baseline gap-2",
+                    i > 0 && "border-l border-border/50 pl-6",
+                  )}
+                >
+                  <dt className="font-mono text-base font-semibold tabular-nums text-amber-100">
+                    {s.value}
+                  </dt>
+                  <dd>{s.label}</dd>
+                </div>
+              ))}
+            </dl>
             <div
               className="fade-up mt-9 flex flex-col gap-3 sm:flex-row"
               style={{ animationDelay: "240ms" }}
@@ -96,21 +118,10 @@ export default function HomePage() {
             className="fade-up md:col-span-5 md:col-start-8"
             style={{ animationDelay: "320ms" }}
           >
-            <dl className="divide-y divide-border/50 border-y border-border/50">
-              {stats.map((s) => (
-                <div
-                  key={s.label}
-                  className="flex items-baseline justify-between gap-6 py-5"
-                >
-                  <dt className="text-sm leading-snug text-muted-foreground">
-                    {s.label}
-                  </dt>
-                  <dd className="font-mono text-2xl font-medium tabular-nums tracking-tight text-amber-100">
-                    {s.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            <p className="mb-3 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+              Оплата
+            </p>
+            <YandexPayWidget merchantId={merchantId} />
           </div>
         </div>
       </section>
