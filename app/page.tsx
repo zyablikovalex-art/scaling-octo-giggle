@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/table";
 import { HeroVideo } from "@/components/hero-video";
 import { PlusLogo, SplitLogo } from "@/components/yandex-pay-mock";
+import { YandexPayButton } from "@/components/yandex-pay-button";
 import { ChatPanel } from "@/components/chat-widget";
 import { LetsGoButton } from "@/components/lets-go-button";
 
@@ -313,6 +314,26 @@ export default function HomePage() {
                   </TableBody>
                 </Table>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="checkout" className="relative">
+        <div className="mx-auto max-w-7xl px-6 pb-20 pt-4 md:pb-28">
+          <div className="mx-auto flex max-w-md flex-col items-center gap-3 text-center">
+            <p className="text-[11px] uppercase tracking-[0.22em] text-amber-200/80">
+              Демо-оплата · Sandbox
+            </p>
+            <h2 className="text-2xl font-semibold leading-tight tracking-tighter md:text-3xl">
+              Оформи тестовый заказ на 1 000&nbsp;₽
+            </h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Кнопка ведёт на форму Яндекс&nbsp;Пэй в песочнице — настоящие
+              деньги не списываются.
+            </p>
+            <div className="mt-3">
+              <YandexPayButton />
             </div>
           </div>
         </div>
