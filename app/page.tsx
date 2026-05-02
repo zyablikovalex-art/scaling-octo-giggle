@@ -1,3 +1,12 @@
+import { TreePine } from "lucide-react";
+
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -136,6 +145,58 @@ export default function HomePage() {
                 </li>
               </ol>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="catalog" className="relative">
+        <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
+          <div className="max-w-2xl">
+            <p className="text-[11px] uppercase tracking-[0.22em] text-amber-200/80">
+              Каталог
+            </p>
+            <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tighter md:text-5xl">
+              Что приехало в этом сезоне.
+            </h2>
+            <p className="mt-5 max-w-[52ch] text-base leading-relaxed text-muted-foreground md:text-lg">
+              Привезём напрямую из питомника. Минимальная партия —
+              десять деревьев.
+            </p>
+          </div>
+          <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {trees.map((t) => (
+              <Card
+                key={t.name}
+                className="flex flex-col border-border/50 bg-card/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-md transition-colors hover:bg-card/50"
+              >
+                <CardHeader className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-emerald-500/40 bg-emerald-500/15 text-emerald-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+                      <TreePine className="h-4 w-4" strokeWidth={1.75} />
+                    </span>
+                    <span className="font-mono text-xs tabular-nums text-muted-foreground">
+                      {t.height}
+                    </span>
+                  </div>
+                  <CardTitle className="text-lg leading-tight">
+                    {t.name}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1 space-y-1">
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    {t.aroma}
+                  </p>
+                  <p className="text-xs text-muted-foreground/80">
+                    {t.needles}
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <span className="font-mono text-base font-semibold tabular-nums text-amber-100">
+                    от&nbsp;{t.price}
+                  </span>
+                </CardFooter>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
