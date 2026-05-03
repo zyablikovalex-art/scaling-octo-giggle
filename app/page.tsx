@@ -321,7 +321,7 @@ export default function HomePage() {
 
       <section id="checkout" className="relative">
         <div className="mx-auto max-w-7xl px-6 pb-20 pt-4 md:pb-28">
-          <div className="mx-auto flex max-w-md flex-col items-center gap-3 text-center">
+          <div className="mx-auto flex max-w-xl flex-col items-center gap-3 text-center">
             <p className="text-[11px] uppercase tracking-[0.22em] text-amber-200/80">
               Демо-оплата · Sandbox
             </p>
@@ -329,11 +329,22 @@ export default function HomePage() {
               Оформи тестовый заказ на 1 000&nbsp;₽
             </h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Кнопка ведёт на форму Яндекс&nbsp;Пэй в песочнице — настоящие
+              Кнопки ведут на форму Яндекс&nbsp;Пэй в песочнице — настоящие
               деньги не списываются.
             </p>
-            <div className="mt-3">
-              <YandexPayButton />
+            <div className="mt-4 flex flex-col items-center gap-6 sm:flex-row sm:items-start sm:gap-10">
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                  Картой
+                </span>
+                <YandexPayButton methods={["CARD"]} />
+              </div>
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                  В рассрочку
+                </span>
+                <YandexPayButton methods={["SPLIT"]} />
+              </div>
             </div>
           </div>
         </div>

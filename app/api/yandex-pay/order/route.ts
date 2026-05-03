@@ -7,6 +7,9 @@ export const dynamic = "force-dynamic";
 const YAPAY_SANDBOX_ORDERS_URL =
   "https://sandbox.pay.yandex.ru/api/merchant/v1/orders";
 
+const ALL_METHODS = ["CARD", "SPLIT"] as const;
+type Method = (typeof ALL_METHODS)[number];
+
 export async function POST(req: Request) {
   const apiKey = process.env.ya_pay_apikey;
   if (!apiKey) {
@@ -15,6 +18,14 @@ export async function POST(req: Request) {
       { status: 500 },
     );
   }
+
+  const reqBody = (await req.json().catch(() => ({}))) as {
+    methods?: Method[];
+  };
+  const methods =
+    Array.isArray(reqBody.methods) && reqBody.methods.length > 0
+      ? reqBody.methods.filter((m): m is Method => ALL_METHODS.includes(m))
+      : [...ALL_METHODS];
 
   const origin =
     req.headers.get("origin") ||
@@ -41,7 +52,7 @@ export async function POST(req: Request) {
       onAbort: `${origin}/?pay=abort`,
     },
     ttl: 1800,
-    availablePaymentMethods: ["CARD", "SPLIT"],
+    availablePaymentMethods: methods,
   };
 
   const upstream = await fetch(YAPAY_SANDBOX_ORDERS_URL, {
