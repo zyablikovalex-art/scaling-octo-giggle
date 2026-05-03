@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Script from "next/script";
 
 const MERCHANT_ID = "90f801c3-8a2b-4484-9470-679d500836d9";
 const TOTAL_AMOUNT = "1000.00";
+
+export type YaPayMethod = "CARD" | "SPLIT";
 
 declare global {
   interface Window {
@@ -26,16 +28,25 @@ declare global {
   }
 }
 
-export function YandexPayButton() {
+interface YandexPayButtonProps {
+  methods?: YaPayMethod[];
+}
+
+export function YandexPayButton({
+  methods = ["CARD", "SPLIT"],
+}: YandexPayButtonProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const sessionRef = useRef<Awaited<
     ReturnType<NonNullable<Window["YaPay"]>["createSession"]>
   > | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const methodsKey = useMemo(() => methods.join(","), [methods]);
+
   useEffect(() => {
     let cancelled = false;
     let pollHandle: number | null = null;
+    const activeMethods = methodsKey.split(",") as YaPayMethod[];
 
     const init = () => {
       const YaPay = window.YaPay;
@@ -47,11 +58,15 @@ export function YandexPayButton() {
         currencyCode: YaPay.CurrencyCode.Rub,
         merchantId: MERCHANT_ID,
         totalAmount: TOTAL_AMOUNT,
-        availablePaymentMethods: ["CARD", "SPLIT"],
+        availablePaymentMethods: activeMethods,
       };
 
       const onPayButtonClick = async () => {
-        const res = await fetch("/api/yandex-pay/order", { method: "POST" });
+        const res = await fetch("/api/yandex-pay/order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ methods: activeMethods }),
+        });
         const data = (await res.json().catch(() => ({}))) as {
           paymentUrl?: string;
           error?: string;
@@ -104,7 +119,7 @@ export function YandexPayButton() {
         sessionRef.current?.destroy?.();
       } catch {}
     };
-  }, []);
+  }, [methodsKey]);
 
   return (
     <>

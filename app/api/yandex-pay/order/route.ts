@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -5,6 +6,9 @@ export const dynamic = "force-dynamic";
 
 const YAPAY_SANDBOX_ORDERS_URL =
   "https://sandbox.pay.yandex.ru/api/merchant/v1/orders";
+
+const ALL_METHODS = ["CARD", "SPLIT"] as const;
+type Method = (typeof ALL_METHODS)[number];
 
 export async function POST(req: Request) {
   const apiKey = process.env.ya_pay_apikey;
@@ -15,11 +19,20 @@ export async function POST(req: Request) {
     );
   }
 
+  const reqBody = (await req.json().catch(() => ({}))) as {
+    methods?: Method[];
+  };
+  const methods =
+    Array.isArray(reqBody.methods) && reqBody.methods.length > 0
+      ? reqBody.methods.filter((m): m is Method => ALL_METHODS.includes(m))
+      : [...ALL_METHODS];
+
   const origin =
     req.headers.get("origin") ||
     `https://${req.headers.get("host") ?? "example.com"}`;
 
   const body = {
+    orderId: randomUUID(),
     currencyCode: "RUB",
     cart: {
       items: [
@@ -39,7 +52,7 @@ export async function POST(req: Request) {
       onAbort: `${origin}/?pay=abort`,
     },
     ttl: 1800,
-    availablePaymentMethods: ["CARD", "SPLIT"],
+    availablePaymentMethods: methods,
   };
 
   const upstream = await fetch(YAPAY_SANDBOX_ORDERS_URL, {
