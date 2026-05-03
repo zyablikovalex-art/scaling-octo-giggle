@@ -337,13 +337,13 @@ export default function HomePage() {
                 <span className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
                   Картой
                 </span>
-                <YandexPayButton methods={["CARD"]} goalId="556580219" />
+                <YandexPayButton methods={["CARD"]} goalId="pay" />
               </div>
               <div className="flex flex-col items-center gap-2">
                 <span className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
                   В рассрочку
                 </span>
-                <YandexPayButton methods={["SPLIT"]} goalId="556580253" />
+                <YandexPayButton methods={["SPLIT"]} goalId="split" />
               </div>
             </div>
           </div>
