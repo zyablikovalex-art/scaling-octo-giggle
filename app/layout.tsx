@@ -6,14 +6,13 @@ import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CozyBackground } from "@/components/cozy-background";
+import { YM_COUNTER_ID } from "@/lib/metrika";
 
 export const metadata: Metadata = {
   title: "Ёлки.Shop — деревья, которые помнят запах детства",
   description:
     "Тёплый лендинг для продажи новогодних ёлок: сосны, пихты и ели прямиком из питомника.",
 };
-
-const YM_COUNTER_ID = 109023784;
 
 export default function RootLayout({
   children,

@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Script from "next/script";
 
+import { reachGoal } from "@/lib/metrika";
+
 const MERCHANT_ID = "90f801c3-8a2b-4484-9470-679d500836d9";
 const TOTAL_AMOUNT = "1000.00";
 
@@ -30,10 +32,12 @@ declare global {
 
 interface YandexPayButtonProps {
   methods?: YaPayMethod[];
+  goalId?: string;
 }
 
 export function YandexPayButton({
   methods = ["CARD", "SPLIT"],
+  goalId,
 }: YandexPayButtonProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const sessionRef = useRef<Awaited<
@@ -62,6 +66,7 @@ export function YandexPayButton({
       };
 
       const onPayButtonClick = async () => {
+        if (goalId) reachGoal(goalId);
         const res = await fetch("/api/yandex-pay/order", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -119,7 +124,7 @@ export function YandexPayButton({
         sessionRef.current?.destroy?.();
       } catch {}
     };
-  }, [methodsKey]);
+  }, [methodsKey, goalId]);
 
   return (
     <>
