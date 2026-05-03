@@ -4,8 +4,10 @@ import { useEffect, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 
 import { Button } from "@/components/ui/button";
+import { reachGoal } from "@/lib/metrika";
 
 const PARTICLES_PER_BURST = 14;
+const GOAL_LETS_GO = "556580216";
 const BURST_COUNT = 24;
 
 type Particle = {
@@ -49,6 +51,7 @@ export function LetsGoButton() {
   }, []);
 
   const handleClick = () => {
+    reachGoal(GOAL_LETS_GO);
     setBursts(makeBursts());
     document.getElementById("assistant")?.scrollIntoView({
       behavior: "smooth",
