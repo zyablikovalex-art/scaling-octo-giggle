@@ -8,10 +8,33 @@ import { SiteFooter } from "@/components/site-footer";
 import { CozyBackground } from "@/components/cozy-background";
 import { YM_COUNTER_ID } from "@/lib/metrika";
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "https://scaling-octo-giggle-5vy7.vercel.app");
+
+const SITE_TITLE = "Ёлки.Shop — деревья, которые помнят запах детства";
+const SITE_DESCRIPTION =
+  "Тёплый лендинг для продажи новогодних ёлок: сосны, пихты и ели прямиком из питомника.";
+
 export const metadata: Metadata = {
-  title: "Ёлки.Shop — деревья, которые помнят запах детства",
-  description:
-    "Тёплый лендинг для продажи новогодних ёлок: сосны, пихты и ели прямиком из питомника.",
+  metadataBase: new URL(SITE_URL),
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    type: "website",
+    locale: "ru_RU",
+    url: SITE_URL,
+    siteName: "Ёлки.Shop",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({
