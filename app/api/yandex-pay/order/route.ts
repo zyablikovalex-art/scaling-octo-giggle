@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -20,6 +21,7 @@ export async function POST(req: Request) {
     `https://${req.headers.get("host") ?? "example.com"}`;
 
   const body = {
+    orderId: randomUUID(),
     currencyCode: "RUB",
     cart: {
       items: [
