@@ -23,7 +23,7 @@ declare global {
       }>;
       CurrencyCode: { Rub: string };
       PaymentEnv: { Sandbox: string; Production: string };
-      ButtonType: { Pay: string };
+      ButtonType: { Pay: string; Checkout?: string };
       ButtonTheme: { Black: string; White: string };
       ButtonWidth: { Auto: string; Max: string };
     };
@@ -33,11 +33,13 @@ declare global {
 interface YandexPayButtonProps {
   methods?: YaPayMethod[];
   goalId?: string;
+  buttonKind?: "pay" | "checkout";
 }
 
 export function YandexPayButton({
   methods = ["CARD", "SPLIT"],
   goalId,
+  buttonKind = "pay",
 }: YandexPayButtonProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const sessionRef = useRef<Awaited<
@@ -93,8 +95,12 @@ export function YandexPayButton({
         .then((session) => {
           if (cancelled || !containerRef.current) return;
           sessionRef.current = session;
+          const wantCheckout = buttonKind === "checkout";
           session.mountButton(containerRef.current, {
-            type: YaPay.ButtonType.Pay,
+            type:
+              wantCheckout && YaPay.ButtonType.Checkout
+                ? YaPay.ButtonType.Checkout
+                : YaPay.ButtonType.Pay,
             theme: YaPay.ButtonTheme.Black,
             width: YaPay.ButtonWidth.Auto,
           });
@@ -124,7 +130,7 @@ export function YandexPayButton({
         sessionRef.current?.destroy?.();
       } catch {}
     };
-  }, [methodsKey, goalId]);
+  }, [methodsKey, goalId, buttonKind]);
 
   return (
     <>

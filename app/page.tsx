@@ -345,6 +345,12 @@ export default function HomePage() {
                 </span>
                 <YandexPayButton methods={["SPLIT"]} goalId="split" />
               </div>
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                  Чекаут
+                </span>
+                <YandexPayButton buttonKind="checkout" goalId="checkout" />
+              </div>
             </div>
           </div>
         </div>
