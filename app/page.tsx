@@ -251,15 +251,19 @@ function ArrowIcon({ className = "" }: { className?: string }) {
 function ThemeTabs({
   value,
   onChange,
+  showLabel = true,
 }: {
-  value: ThemeKey;
+  value: ThemeKey | null;
   onChange: (key: ThemeKey) => void;
+  showLabel?: boolean;
 }) {
   return (
     <div className="flex flex-col items-center gap-2 md:gap-5">
-      <p className="text-[10px] uppercase tracking-[0.24em] text-muted md:text-xs md:tracking-[0.28em]">
-        Куда путешествуем
-      </p>
+      {showLabel && (
+        <p className="text-[10px] uppercase tracking-[0.24em] text-muted md:text-xs md:tracking-[0.28em]">
+          Куда путешествуем
+        </p>
+      )}
       <div
         role="tablist"
         aria-label="Куда путешествуем"
@@ -515,10 +519,11 @@ function CatalogView({ theme, t }: { theme: ThemeKey; t: Theme }) {
 }
 
 export default function HomePage() {
-  const [theme, setTheme] = useState<ThemeKey>("city");
+  const [theme, setTheme] = useState<ThemeKey | null>(null);
   const [view, setView] = useState<View>("intro");
   const [transitioning, setTransitioning] = useState(false);
-  const t = themes[theme];
+  const started = theme !== null;
+  const t = themes[theme ?? "city"];
 
   const switchView = (next: View) => {
     if (next === view || transitioning) return;
@@ -532,17 +537,26 @@ export default function HomePage() {
     }, 300);
   };
 
+  const handleTabClick = (key: ThemeKey) => {
+    setTheme(key);
+    setView("intro");
+  };
+
   return (
     <div
       className="flex min-h-[100dvh] flex-col transition-colors duration-700 ease-out"
-      style={{ backgroundColor: t.baseColor, backgroundImage: t.gradient }}
+      style={
+        started
+          ? { backgroundColor: t.baseColor, backgroundImage: t.gradient }
+          : { backgroundColor: "#FFF8F0" }
+      }
     >
       <header className="shrink-0">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3 md:py-5">
           <a href="/" className="font-display text-lg font-bold tracking-tight md:text-xl">
             Маршруты
           </a>
-          {view === "catalog" && (
+          {started && view === "catalog" && (
             <button
               type="button"
               onClick={() => switchView("intro")}
@@ -554,21 +568,47 @@ export default function HomePage() {
         </div>
       </header>
 
-      <div className="mx-auto w-full max-w-6xl shrink-0 px-6 pb-2 pt-4 md:pb-6 md:pt-12">
-        <ThemeTabs value={theme} onChange={setTheme} />
+      <div
+        className="mx-auto flex w-full max-w-6xl flex-col items-center px-6 transition-[padding] duration-700 ease-[cubic-bezier(0.65,0,0.35,1)]"
+        style={{
+          paddingTop: started ? undefined : "18vh",
+          paddingBottom: started ? undefined : "0",
+        }}
+      >
+        <div
+          className={`grid w-full overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.65,0,0.35,1)] ${
+            started ? "grid-rows-[0fr] opacity-0" : "grid-rows-[1fr] opacity-100"
+          }`}
+        >
+          <div className="min-h-0">
+            <h1 className="pb-10 text-center font-display text-5xl font-bold leading-[1.05] tracking-tight md:pb-16 md:text-8xl">
+              Куда едем?
+            </h1>
+          </div>
+        </div>
+        <div
+          className={`w-full transition-[padding] duration-700 ease-[cubic-bezier(0.65,0,0.35,1)] ${
+            started ? "pb-2 pt-4 md:pb-6 md:pt-12" : "pb-0 pt-0"
+          }`}
+        >
+          <ThemeTabs value={theme} onChange={handleTabClick} showLabel={started} />
+        </div>
       </div>
 
-      <div
-        className={`flex flex-1 flex-col transition-opacity duration-300 ease-out ${
-          transitioning ? "opacity-0" : "opacity-100"
-        }`}
-      >
-        {view === "intro" ? (
-          <IntroView theme={theme} t={t} onStart={() => switchView("catalog")} />
-        ) : (
-          <CatalogView theme={theme} t={t} />
-        )}
-      </div>
+      {started && (
+        <div
+          key={view}
+          className={`flex flex-1 flex-col transition-opacity duration-300 ease-out ${
+            transitioning ? "opacity-0" : "opacity-100 animate-fade-up"
+          }`}
+        >
+          {view === "intro" ? (
+            <IntroView theme={theme!} t={t} onStart={() => switchView("catalog")} />
+          ) : (
+            <CatalogView theme={theme!} t={t} />
+          )}
+        </div>
+      )}
     </div>
   );
 }
