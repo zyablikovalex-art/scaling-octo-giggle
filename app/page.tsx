@@ -571,28 +571,20 @@ export default function HomePage() {
       <div
         className="mx-auto flex w-full max-w-6xl flex-col items-center px-6 transition-[padding] duration-700 ease-[cubic-bezier(0.65,0,0.35,1)]"
         style={{
-          paddingTop: started ? undefined : "18vh",
-          paddingBottom: started ? undefined : "0",
+          paddingTop: started ? "1rem" : "16vh",
+          paddingBottom: started ? "1.5rem" : "0",
         }}
       >
-        <div
-          className={`grid w-full overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.65,0,0.35,1)] ${
-            started ? "grid-rows-[0fr] opacity-0" : "grid-rows-[1fr] opacity-100"
+        <h1
+          className={`text-center font-display font-bold leading-[1.05] tracking-tight transition-all duration-700 ease-[cubic-bezier(0.65,0,0.35,1)] ${
+            started
+              ? "pb-4 text-2xl md:pb-6 md:text-4xl"
+              : "pb-10 text-5xl md:pb-16 md:text-8xl"
           }`}
         >
-          <div className="min-h-0">
-            <h1 className="pb-10 text-center font-display text-5xl font-bold leading-[1.05] tracking-tight md:pb-16 md:text-8xl">
-              Куда едем?
-            </h1>
-          </div>
-        </div>
-        <div
-          className={`w-full transition-[padding] duration-700 ease-[cubic-bezier(0.65,0,0.35,1)] ${
-            started ? "pb-2 pt-4 md:pb-6 md:pt-12" : "pb-0 pt-0"
-          }`}
-        >
-          <ThemeTabs value={theme} onChange={handleTabClick} showLabel={started} />
-        </div>
+          Куда едем?
+        </h1>
+        <ThemeTabs value={theme} onChange={handleTabClick} showLabel={started} />
       </div>
 
       {started && (
