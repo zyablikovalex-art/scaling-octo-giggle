@@ -1,3 +1,46 @@
+"use client";
+
+import { useState } from "react";
+
+type ThemeKey = "city" | "nature" | "sea";
+
+type Theme = {
+  label: string;
+  baseColor: string;
+  gradient: string;
+  accent: string;
+  heroGradient: string;
+};
+
+const themes: Record<ThemeKey, Theme> = {
+  city: {
+    label: "Город",
+    baseColor: "#FFF8F0",
+    gradient:
+      "radial-gradient(ellipse 60% 45% at 85% -10%, rgba(212,165,116,0.32), transparent 60%), radial-gradient(ellipse 55% 40% at -10% 70%, rgba(200,147,43,0.22), transparent 60%), radial-gradient(ellipse 50% 35% at 50% 110%, rgba(184,134,90,0.18), transparent 60%)",
+    accent: "#B8865A",
+    heroGradient: "linear-gradient(135deg, #D4A574, #B8865A 45%, #7B4F2C)",
+  },
+  nature: {
+    label: "Природа",
+    baseColor: "#EAF3E2",
+    gradient:
+      "radial-gradient(ellipse 60% 45% at 85% -10%, rgba(124,179,66,0.34), transparent 60%), radial-gradient(ellipse 55% 40% at -10% 70%, rgba(63,125,58,0.24), transparent 60%), radial-gradient(ellipse 50% 35% at 50% 110%, rgba(167,205,123,0.28), transparent 60%)",
+    accent: "#3F7D3A",
+    heroGradient: "linear-gradient(135deg, #7CB342, #3F7D3A 45%, #1F4A1B)",
+  },
+  sea: {
+    label: "Море",
+    baseColor: "#E6F2F5",
+    gradient:
+      "radial-gradient(ellipse 60% 45% at 85% -10%, rgba(46,139,158,0.34), transparent 60%), radial-gradient(ellipse 55% 40% at -10% 70%, rgba(31,92,107,0.24), transparent 60%), radial-gradient(ellipse 50% 35% at 50% 110%, rgba(188,217,223,0.4), transparent 60%)",
+    accent: "#1F5C6B",
+    heroGradient: "linear-gradient(135deg, #2E8B9E, #1F5C6B 45%, #0F3540)",
+  },
+};
+
+const themeOrder: ThemeKey[] = ["city", "nature", "sea"];
+
 const guides = [
   {
     city: "Лиссабон",
@@ -70,31 +113,77 @@ function ArrowIcon({ className = "" }: { className?: string }) {
   );
 }
 
-export default function HomePage() {
+function ThemeTabs({
+  value,
+  onChange,
+}: {
+  value: ThemeKey;
+  onChange: (key: ThemeKey) => void;
+}) {
   return (
-    <>
+    <div className="flex flex-col items-center gap-3">
+      <p className="text-[11px] uppercase tracking-[0.24em] text-muted">
+        Куда путешествуем
+      </p>
+      <div
+        role="tablist"
+        aria-label="Куда путешествуем"
+        className="inline-flex items-center gap-1 rounded-full border border-ink/10 bg-cream/60 p-1 backdrop-blur"
+      >
+        {themeOrder.map((key) => {
+          const active = value === key;
+          return (
+            <button
+              key={key}
+              role="tab"
+              aria-selected={active}
+              onClick={() => onChange(key)}
+              className={`rounded-full px-5 py-1.5 text-sm font-medium transition-colors ${
+                active
+                  ? "bg-ink text-cream shadow-soft"
+                  : "text-ink/70 hover:text-ink"
+              }`}
+            >
+              {themes[key].label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+export default function HomePage() {
+  const [theme, setTheme] = useState<ThemeKey>("city");
+  const t = themes[theme];
+
+  return (
+    <div
+      className="transition-colors duration-700 ease-out"
+      style={{
+        backgroundColor: t.baseColor,
+        backgroundImage: t.gradient,
+      }}
+    >
       <header className="border-b border-ink/5">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-          <a href="/" className="font-serif text-xl font-semibold tracking-tight">
-            Маршруты
-          </a>
-          <nav className="hidden items-center gap-8 text-sm text-muted sm:flex">
-            <a href="#guides" className="transition-colors hover:text-ink">
-              Каталог
+        <div className="mx-auto max-w-6xl px-6 py-5">
+          <div className="flex items-center justify-between">
+            <a
+              href="/"
+              className="font-display text-xl font-bold tracking-tight"
+            >
+              Маршруты
             </a>
-            <a href="#inside" className="transition-colors hover:text-ink">
-              Что внутри
+            <a
+              href="#guides"
+              className="rounded-full bg-ink px-4 py-2 text-sm text-cream transition-colors hover:bg-ink/85"
+            >
+              Купить гид
             </a>
-            <a href="#faq" className="transition-colors hover:text-ink">
-              Вопросы
-            </a>
-          </nav>
-          <a
-            href="#guides"
-            className="rounded-full bg-ink px-4 py-2 text-sm text-cream transition-colors hover:bg-ink/85"
-          >
-            Купить гид
-          </a>
+          </div>
+          <div className="mt-6 flex justify-center pb-2">
+            <ThemeTabs value={theme} onChange={setTheme} />
+          </div>
         </div>
       </header>
 
@@ -102,19 +191,22 @@ export default function HomePage() {
         <section className="relative overflow-hidden">
           <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 pb-20 pt-20 md:grid-cols-12 md:pb-28 md:pt-28">
             <div className="md:col-span-7">
-              <p className="text-[11px] uppercase tracking-[0.24em] text-clay">
-                Авторские гиды · 12 городов
+              <p
+                className="text-[11px] uppercase tracking-[0.24em]"
+                style={{ color: t.accent }}
+              >
+                Авторские гиды · 12 направлений
               </p>
-              <h1 className="mt-5 font-serif text-5xl font-semibold leading-[1.02] tracking-tight md:text-7xl">
-                Города,
+              <h1 className="mt-5 font-display text-5xl font-bold leading-[1.02] tracking-tight md:text-7xl">
+                Места,
                 <br />
                 которые читают
                 <br />
-                между улицами.
+                между строк.
               </h1>
               <p className="mt-7 max-w-[52ch] text-base leading-relaxed text-muted md:text-lg">
                 Не путеводители. Дневники редакторов, которые жили в этих
-                городах и знают, где утром пахнет хлебом, а вечером —
+                местах и знают, где утром пахнет хлебом, а вечером —
                 апельсиновыми деревьями. PDF, карта и плейлист — на четыре дня.
               </p>
               <div className="mt-9 flex flex-wrap items-center gap-4">
@@ -122,7 +214,7 @@ export default function HomePage() {
                   href="#guides"
                   className="group inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-medium text-cream shadow-soft transition-all hover:bg-ink/85 hover:shadow-lift"
                 >
-                  Выбрать город
+                  Выбрать направление
                   <ArrowIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </a>
                 <a
@@ -135,7 +227,10 @@ export default function HomePage() {
             </div>
 
             <div className="md:col-span-5">
-              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-gradient-to-br from-terracotta via-clay to-[#7B4F2C] shadow-lift">
+              <div
+                className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl shadow-lift transition-[background-image] duration-700"
+                style={{ backgroundImage: t.heroGradient }}
+              >
                 <div
                   className="absolute inset-0 opacity-40 mix-blend-overlay"
                   style={{
@@ -144,8 +239,8 @@ export default function HomePage() {
                   }}
                 />
                 <div className="absolute inset-x-0 bottom-0 p-7 text-cream">
-                  <p className="font-serif text-3xl leading-tight">
-                    «Лиссабон на четыре утра.»
+                  <p className="font-display text-3xl font-semibold leading-tight">
+                    «{t.label} на четыре утра.»
                   </p>
                   <p className="mt-3 text-sm text-cream/80">
                     Из последнего гида редакции
@@ -156,14 +251,17 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section id="guides" className="border-t border-ink/5 bg-sand/40">
+        <section id="guides" className="border-t border-ink/5 bg-ink/[0.03]">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
             <div className="flex items-end justify-between gap-6">
               <div>
-                <p className="text-[11px] uppercase tracking-[0.24em] text-clay">
+                <p
+                  className="text-[11px] uppercase tracking-[0.24em]"
+                  style={{ color: t.accent }}
+                >
                   Каталог
                 </p>
-                <h2 className="mt-3 font-serif text-4xl font-semibold tracking-tight md:text-5xl">
+                <h2 className="mt-3 font-display text-4xl font-bold tracking-tight md:text-5xl">
                   Свежая полка.
                 </h2>
               </div>
@@ -191,17 +289,20 @@ export default function HomePage() {
                     <p className="text-[11px] uppercase tracking-[0.2em] text-muted">
                       {g.country}
                     </p>
-                    <h3 className="mt-2 font-serif text-2xl font-semibold leading-tight">
+                    <h3 className="mt-2 font-display text-2xl font-bold leading-tight">
                       {g.city}
                     </h3>
                     <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
                       {g.note}
                     </p>
                     <div className="mt-5 flex items-center justify-between">
-                      <span className="font-serif text-xl font-semibold tabular-nums">
+                      <span className="font-display text-xl font-bold tabular-nums">
                         {g.price}
                       </span>
-                      <span className="inline-flex items-center gap-1.5 text-sm font-medium text-ink transition-colors group-hover:text-clay">
+                      <span
+                        className="inline-flex items-center gap-1.5 text-sm font-medium text-ink transition-colors"
+                        style={{ color: undefined }}
+                      >
                         Купить
                         <ArrowIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                       </span>
@@ -216,10 +317,13 @@ export default function HomePage() {
         <section id="inside" className="border-t border-ink/5">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
             <div className="max-w-2xl">
-              <p className="text-[11px] uppercase tracking-[0.24em] text-clay">
+              <p
+                className="text-[11px] uppercase tracking-[0.24em]"
+                style={{ color: t.accent }}
+              >
                 Что внутри
               </p>
-              <h2 className="mt-3 font-serif text-4xl font-semibold tracking-tight md:text-5xl">
+              <h2 className="mt-3 font-display text-4xl font-bold tracking-tight md:text-5xl">
                 Не лонгрид и не Википедия.
               </h2>
               <p className="mt-5 text-base leading-relaxed text-muted md:text-lg">
@@ -231,11 +335,14 @@ export default function HomePage() {
             <div className="mt-14 grid grid-cols-1 gap-x-10 gap-y-10 md:grid-cols-2">
               {features.map((f, i) => (
                 <div key={f.title} className="flex gap-5">
-                  <span className="mt-1 font-serif text-xl font-semibold text-clay tabular-nums">
+                  <span
+                    className="mt-1 font-display text-xl font-bold tabular-nums"
+                    style={{ color: t.accent }}
+                  >
                     0{i + 1}
                   </span>
                   <div>
-                    <h3 className="font-serif text-2xl font-semibold leading-tight">
+                    <h3 className="font-display text-2xl font-bold leading-tight">
                       {f.title}
                     </h3>
                     <p className="mt-2 text-base leading-relaxed text-muted">
@@ -251,8 +358,8 @@ export default function HomePage() {
         <section className="border-t border-ink/5 bg-ink text-cream">
           <div className="mx-auto flex max-w-6xl flex-col items-start gap-8 px-6 py-20 md:flex-row md:items-end md:justify-between md:py-24">
             <div className="max-w-2xl">
-              <h2 className="font-serif text-4xl font-semibold leading-tight tracking-tight md:text-5xl">
-                Один город. Четыре дня.
+              <h2 className="font-display text-4xl font-bold leading-tight tracking-tight md:text-5xl">
+                Одно направление. Четыре дня.
                 <br />
                 590 ₽.
               </h2>
@@ -288,6 +395,6 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
-    </>
+    </div>
   );
 }

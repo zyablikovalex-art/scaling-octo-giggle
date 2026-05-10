@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Cormorant_Garamond } from "next/font/google";
+import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
 
 const sans = Inter({
@@ -8,10 +8,10 @@ const sans = Inter({
   display: "swap",
 });
 
-const serif = Cormorant_Garamond({
+const display = Manrope({
   subsets: ["latin", "cyrillic"],
-  weight: ["500", "600", "700"],
-  variable: "--font-serif",
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-display",
   display: "swap",
 });
 
@@ -27,10 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ru" className={`${sans.variable} ${serif.variable}`}>
-      <body className="min-h-[100dvh] bg-cream text-ink antialiased">
-        {children}
-      </body>
+    <html lang="ru" className={`${sans.variable} ${display.variable}`}>
+      <body className="min-h-[100dvh] text-ink antialiased">{children}</body>
     </html>
   );
 }
