@@ -256,14 +256,14 @@ function ThemeTabs({
   onChange: (key: ThemeKey) => void;
 }) {
   return (
-    <div className="flex flex-col items-center gap-3">
-      <p className="text-[11px] uppercase tracking-[0.24em] text-muted">
+    <div className="flex flex-col items-center gap-5">
+      <p className="text-xs uppercase tracking-[0.28em] text-muted">
         Куда путешествуем
       </p>
       <div
         role="tablist"
         aria-label="Куда путешествуем"
-        className="inline-flex items-center gap-1 rounded-full border border-ink/10 bg-cream/60 p-1 backdrop-blur"
+        className="inline-flex flex-wrap items-center justify-center gap-1.5 rounded-full border border-ink/10 bg-cream/70 p-1.5 backdrop-blur"
       >
         {themeOrder.map((key) => {
           const active = value === key;
@@ -273,7 +273,7 @@ function ThemeTabs({
               role="tab"
               aria-selected={active}
               onClick={() => onChange(key)}
-              className={`rounded-full px-5 py-1.5 text-sm font-medium transition-colors ${
+              className={`rounded-full px-7 py-3 text-base font-medium transition-colors md:px-9 md:py-3.5 md:text-lg ${
                 active
                   ? "bg-ink text-cream shadow-soft"
                   : "text-ink/70 hover:text-ink"
@@ -301,7 +301,7 @@ function IntroView({
   return (
     <main>
       <section className="relative overflow-hidden">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 pb-12 pt-16 md:grid-cols-12 md:pb-16 md:pt-20">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 pb-12 pt-6 md:grid-cols-12 md:pb-16 md:pt-10">
           <div className="md:col-span-7">
             <div key={theme} className="animate-fade-up">
               <p
@@ -368,7 +368,7 @@ function CatalogView({ theme, t }: { theme: ThemeKey; t: Theme }) {
   return (
     <main>
       <section id="guides" className="bg-ink/[0.03]">
-        <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
+        <div className="mx-auto max-w-6xl px-6 py-12 md:py-16">
           <div className="flex items-end justify-between gap-6">
             <div>
               <p
@@ -537,30 +537,26 @@ export default function HomePage() {
       className="min-h-[100dvh] transition-colors duration-700 ease-out"
       style={{ backgroundColor: t.baseColor, backgroundImage: t.gradient }}
     >
-      <header className="border-b border-ink/5">
-        <div className="mx-auto max-w-6xl px-6 py-5">
-          <div className="flex items-center justify-between">
-            <a
-              href="/"
-              className="font-display text-xl font-bold tracking-tight"
+      <header>
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+          <a href="/" className="font-display text-xl font-bold tracking-tight">
+            Маршруты
+          </a>
+          {view === "catalog" && (
+            <button
+              type="button"
+              onClick={() => switchView("intro")}
+              className="text-sm text-ink/70 transition-colors hover:text-ink"
             >
-              Маршруты
-            </a>
-            {view === "catalog" && (
-              <button
-                type="button"
-                onClick={() => switchView("intro")}
-                className="text-sm text-ink/70 transition-colors hover:text-ink"
-              >
-                ← К началу
-              </button>
-            )}
-          </div>
-          <div className="mt-6 flex justify-center pb-2">
-            <ThemeTabs value={theme} onChange={setTheme} />
-          </div>
+              ← К началу
+            </button>
+          )}
         </div>
       </header>
+
+      <div className="mx-auto max-w-6xl px-6 pt-10 pb-4 md:pt-14 md:pb-6">
+        <ThemeTabs value={theme} onChange={setTheme} />
+      </div>
 
       <div
         className={`transition-opacity duration-300 ease-out ${
