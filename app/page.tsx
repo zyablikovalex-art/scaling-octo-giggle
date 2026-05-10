@@ -256,14 +256,14 @@ function ThemeTabs({
   onChange: (key: ThemeKey) => void;
 }) {
   return (
-    <div className="flex flex-col items-center gap-5">
-      <p className="text-xs uppercase tracking-[0.28em] text-muted">
+    <div className="flex flex-col items-center gap-2 md:gap-5">
+      <p className="text-[10px] uppercase tracking-[0.24em] text-muted md:text-xs md:tracking-[0.28em]">
         Куда путешествуем
       </p>
       <div
         role="tablist"
         aria-label="Куда путешествуем"
-        className="inline-flex flex-wrap items-center justify-center gap-1.5 rounded-full border border-ink/10 bg-cream/70 p-1.5 backdrop-blur"
+        className="inline-flex flex-wrap items-center justify-center gap-1 rounded-full border border-ink/10 bg-cream/70 p-1 backdrop-blur md:gap-1.5 md:p-1.5"
       >
         {themeOrder.map((key) => {
           const active = value === key;
@@ -273,7 +273,7 @@ function ThemeTabs({
               role="tab"
               aria-selected={active}
               onClick={() => onChange(key)}
-              className={`rounded-full px-7 py-3 text-base font-medium transition-colors md:px-9 md:py-3.5 md:text-lg ${
+              className={`rounded-full px-5 py-2 text-sm font-medium transition-colors md:px-9 md:py-3.5 md:text-lg ${
                 active
                   ? "bg-ink text-cream shadow-soft"
                   : "text-ink/70 hover:text-ink"
@@ -299,21 +299,21 @@ function IntroView({
 }) {
   const c = heroContent[theme];
   return (
-    <main>
-      <section className="relative overflow-hidden">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 pb-12 pt-6 md:grid-cols-12 md:pb-16 md:pt-10">
+    <main className="flex flex-1 flex-col">
+      <section className="relative flex flex-1 flex-col overflow-hidden">
+        <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-start gap-4 px-6 pt-2 md:grid-cols-12 md:items-center md:gap-12 md:pb-12 md:pt-8">
           <div className="md:col-span-7">
             <div key={theme} className="animate-fade-up">
               <p
-                className="text-[11px] uppercase tracking-[0.24em]"
+                className="text-[10px] uppercase tracking-[0.24em] md:text-[11px]"
                 style={{ color: t.accent }}
               >
                 {c.label}
               </p>
-              <h1 className="mt-5 font-display text-5xl font-bold leading-[1.02] tracking-tight md:text-7xl">
+              <h1 className="mt-3 font-display text-3xl font-bold leading-[1.05] tracking-tight sm:text-4xl md:mt-5 md:text-7xl md:leading-[1.02]">
                 {c.title}
               </h1>
-              <p className="mt-7 max-w-[52ch] text-base leading-relaxed text-muted md:text-lg">
+              <p className="mt-3 max-w-[52ch] text-sm leading-relaxed text-muted md:mt-7 md:text-lg">
                 {c.subtitle}
               </p>
             </div>
@@ -321,7 +321,7 @@ function IntroView({
 
           <div className="md:col-span-5">
             <div
-              className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl shadow-lift transition-[background-image] duration-700"
+              className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl shadow-lift transition-[background-image] duration-700 md:aspect-[4/5] md:rounded-3xl"
               style={{ backgroundImage: t.heroGradient }}
             >
               <div
@@ -331,12 +331,12 @@ function IntroView({
                     "radial-gradient(circle at 20% 20%, rgba(255,248,240,0.5), transparent 40%), radial-gradient(circle at 80% 80%, rgba(45,52,54,0.4), transparent 50%)",
                 }}
               />
-              <div className="absolute inset-x-0 bottom-0 p-7 text-cream">
+              <div className="absolute inset-x-0 bottom-0 p-4 text-cream md:p-7">
                 <div key={theme} className="animate-fade-up">
-                  <p className="font-display text-3xl font-semibold leading-tight">
+                  <p className="font-display text-xl font-semibold leading-tight md:text-3xl">
                     «{c.quote}»
                   </p>
-                  <p className="mt-3 text-sm text-cream/80">
+                  <p className="mt-1.5 text-xs text-cream/80 md:mt-3 md:text-sm">
                     Из последнего гида редакции
                   </p>
                 </div>
@@ -344,21 +344,21 @@ function IntroView({
             </div>
           </div>
         </div>
-      </section>
 
-      <div className="mx-auto flex max-w-6xl flex-col items-center px-6 pb-24 text-center md:pb-32">
-        <button
-          type="button"
-          onClick={onStart}
-          className="group inline-flex items-center gap-3 rounded-full bg-ink px-10 py-5 text-base font-medium text-cream shadow-soft transition-all hover:bg-ink/85 hover:shadow-lift"
-        >
-          Поехали
-          <ArrowIcon className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-        </button>
-        <p className="mt-4 text-xs uppercase tracking-[0.2em] text-muted">
-          Откроется каталог гидов
-        </p>
-      </div>
+        <div className="mx-auto mt-auto flex w-full max-w-6xl flex-col items-center px-6 pb-6 pt-4 text-center md:pb-24 md:pt-8">
+          <button
+            type="button"
+            onClick={onStart}
+            className="group inline-flex items-center gap-3 rounded-full bg-ink px-8 py-3.5 text-base font-medium text-cream shadow-soft transition-all hover:bg-ink/85 hover:shadow-lift md:px-10 md:py-5"
+          >
+            Поехали
+            <ArrowIcon className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+          </button>
+          <p className="mt-3 hidden text-xs uppercase tracking-[0.2em] text-muted md:block md:mt-4">
+            Откроется каталог гидов
+          </p>
+        </div>
+      </section>
     </main>
   );
 }
@@ -534,12 +534,12 @@ export default function HomePage() {
 
   return (
     <div
-      className="min-h-[100dvh] transition-colors duration-700 ease-out"
+      className="flex min-h-[100dvh] flex-col transition-colors duration-700 ease-out"
       style={{ backgroundColor: t.baseColor, backgroundImage: t.gradient }}
     >
-      <header>
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-          <a href="/" className="font-display text-xl font-bold tracking-tight">
+      <header className="shrink-0">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3 md:py-5">
+          <a href="/" className="font-display text-lg font-bold tracking-tight md:text-xl">
             Маршруты
           </a>
           {view === "catalog" && (
@@ -554,12 +554,12 @@ export default function HomePage() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-6xl px-6 pt-10 pb-4 md:pt-14 md:pb-6">
+      <div className="mx-auto w-full max-w-6xl shrink-0 px-6 pb-2 pt-4 md:pb-6 md:pt-12">
         <ThemeTabs value={theme} onChange={setTheme} />
       </div>
 
       <div
-        className={`transition-opacity duration-300 ease-out ${
+        className={`flex flex-1 flex-col transition-opacity duration-300 ease-out ${
           transitioning ? "opacity-0" : "opacity-100"
         }`}
       >
