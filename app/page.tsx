@@ -544,14 +544,23 @@ export default function HomePage() {
 
   return (
     <div
-      className="flex min-h-[100dvh] flex-col transition-colors duration-700 ease-out"
-      style={
-        started
-          ? { backgroundColor: t.baseColor, backgroundImage: t.gradient }
-          : { backgroundColor: "#FFF8F0" }
-      }
+      className="relative flex min-h-[100dvh] flex-col"
+      style={{ backgroundColor: "#FFF8F0" }}
     >
-      <header className="shrink-0">
+      {themeOrder.map((key) => (
+        <div
+          key={key}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 transition-opacity duration-700 ease-out"
+          style={{
+            backgroundColor: themes[key].baseColor,
+            backgroundImage: themes[key].gradient,
+            opacity: theme === key ? 1 : 0,
+          }}
+        />
+      ))}
+
+      <header className="relative shrink-0">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3 md:py-5">
           <a href="/" className="font-display text-lg font-bold tracking-tight md:text-xl">
             Маршруты
@@ -569,14 +578,13 @@ export default function HomePage() {
       </header>
 
       <div
-        className="mx-auto flex w-full max-w-6xl flex-col items-center px-6 transition-[padding] duration-700 ease-[cubic-bezier(0.65,0,0.35,1)]"
+        className="relative mx-auto flex w-full max-w-6xl flex-col items-center px-6 pb-6 pt-4 transition-transform duration-700 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform"
         style={{
-          paddingTop: started ? "1rem" : "16vh",
-          paddingBottom: started ? "1.5rem" : "0",
+          transform: started ? "translateY(0)" : "translateY(14vh)",
         }}
       >
         <h1
-          className={`text-center font-display font-bold leading-[1.05] tracking-tight transition-all duration-700 ease-[cubic-bezier(0.65,0,0.35,1)] ${
+          className={`text-center font-display font-bold leading-[1.05] tracking-tight transition-[font-size,padding,line-height] duration-700 ease-[cubic-bezier(0.65,0,0.35,1)] ${
             started
               ? "pb-4 text-2xl md:pb-6 md:text-4xl"
               : "pb-10 text-5xl md:pb-16 md:text-8xl"
@@ -590,7 +598,7 @@ export default function HomePage() {
       {started && (
         <div
           key={view}
-          className={`flex flex-1 flex-col transition-opacity duration-300 ease-out ${
+          className={`relative flex flex-1 flex-col transition-opacity duration-300 ease-out ${
             transitioning ? "opacity-0" : "opacity-100 animate-fade-up"
           }`}
         >
