@@ -320,10 +320,18 @@ function IntroView({
           </div>
 
           <div className="md:col-span-5">
-            <div
-              className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl shadow-lift transition-[background-image] duration-700 md:aspect-[4/5] md:rounded-3xl"
-              style={{ backgroundImage: t.heroGradient }}
-            >
+            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl shadow-lift md:aspect-[4/5] md:rounded-3xl">
+              {themeOrder.map((key) => (
+                <div
+                  key={key}
+                  aria-hidden
+                  className="absolute inset-0 transition-opacity duration-700 ease-out"
+                  style={{
+                    backgroundImage: themes[key].heroGradient,
+                    opacity: theme === key ? 1 : 0,
+                  }}
+                />
+              ))}
               <div
                 className="absolute inset-0 opacity-40 mix-blend-overlay"
                 style={{
@@ -534,10 +542,22 @@ export default function HomePage() {
 
   return (
     <div
-      className="flex min-h-[100dvh] flex-col transition-colors duration-700 ease-out"
-      style={{ backgroundColor: t.baseColor, backgroundImage: t.gradient }}
+      className="relative flex min-h-[100dvh] flex-col transition-colors duration-700 ease-out"
+      style={{ backgroundColor: t.baseColor }}
     >
-      <header className="shrink-0">
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-0">
+        {themeOrder.map((key) => (
+          <div
+            key={key}
+            className="absolute inset-0 transition-opacity duration-700 ease-out"
+            style={{
+              backgroundImage: themes[key].gradient,
+              opacity: theme === key ? 1 : 0,
+            }}
+          />
+        ))}
+      </div>
+      <header className="relative shrink-0">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3 md:py-5">
           <a href="/" className="font-display text-lg font-bold tracking-tight md:text-xl">
             Маршруты
@@ -554,12 +574,12 @@ export default function HomePage() {
         </div>
       </header>
 
-      <div className="mx-auto w-full max-w-6xl shrink-0 px-6 pb-2 pt-4 md:pb-6 md:pt-12">
+      <div className="relative mx-auto w-full max-w-6xl shrink-0 animate-fade-up px-6 pb-2 pt-4 md:pb-6 md:pt-12">
         <ThemeTabs value={theme} onChange={setTheme} />
       </div>
 
       <div
-        className={`flex flex-1 flex-col transition-opacity duration-300 ease-out ${
+        className={`relative flex flex-1 flex-col transition-opacity duration-300 ease-out ${
           transitioning ? "opacity-0" : "opacity-100"
         }`}
       >
